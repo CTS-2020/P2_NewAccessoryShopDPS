@@ -1,0 +1,97 @@
+﻿.modalsubmit
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: black;
+    z-index: 99;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+    -moz-opacity: 0.8;
+    min-height: 100%;
+    width: 100%;
+}
+.loadingsubmit
+{
+    font-family: Arial;
+    font-size: 10pt;
+    border: 5px solid #67CFF5;
+    width: 300px;
+    height: 200px;
+    display: none;
+    position: fixed;
+    background-color: White;
+    z-index: 999;
+}
+.modalgenerate
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: black;
+    z-index: 99;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+    -moz-opacity: 0.8;
+    min-height: 100%;
+    width: 100%;
+}
+.loadinggenerate
+{
+    font-family: Arial;
+    font-size: 10pt;
+    border: 5px solid #67CFF5;
+    width: 300px;
+    height: 200px;
+    display: none;
+    position: fixed;
+    background-color: White;
+    z-index: 999;
+}
+.modalimport
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: black;
+    z-index: 99;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+    -moz-opacity: 0.8;
+    min-height: 100%;
+    width: 100%;
+}
+.loadingimport
+{
+    font-family: Arial;
+    font-size: 10pt;
+    border: 5px solid #67CFF5;
+    width: 300px;
+    height: 200px;
+    display: none;
+    position: fixed;
+    background-color: White;
+    z-index: 999;
+}
+#Popup
+{
+
+    height:200px;
+    width:300px;
+    position:fixed;
+    z-index:102;
+    left:50%;
+    top:50%;
+    margin-top:-130px;
+    margin-left:-180px;
+    font-weight:bold;
+    font-size:10pt;
+    padding:20px;
+    background-color:#fff;
+    border:10px solid #9cc3f7;
+    border-radius:20px;
+    -webkit-border-radius:20px;
+    -moz-border-radius:20px;
+    text-align:center;
+    display:none;
+}

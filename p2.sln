@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34616.47
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "p2", ".", "{05966F26-7D35-4A20-8DFC-434DAE2EA08D}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8"
+		Debug.AspNetCompiler.VirtualPath = "/ESalesPortal"
+		Debug.AspNetCompiler.PhysicalPath = "..\p2\"
+		Debug.AspNetCompiler.TargetPath = "..\ESalesPortal\PrecompiledWeb\ESalesPortal\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/ESalesPortal"
+		Release.AspNetCompiler.PhysicalPath = "..\p2\"
+		Release.AspNetCompiler.TargetPath = "..\ESalesPortal\PrecompiledWeb\ESalesPortal\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "1455"
+		SlnRelativePath = "..\p2\"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|.NET = Debug|.NET
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05966F26-7D35-4A20-8DFC-434DAE2EA08D}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{05966F26-7D35-4A20-8DFC-434DAE2EA08D}.Debug|.NET.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {96C96CC4-3370-42A8-BD23-2558010DDE12}
+	EndGlobalSection
+EndGlobal

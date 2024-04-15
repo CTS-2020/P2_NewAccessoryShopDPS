@@ -1,0 +1,283 @@
+using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Text;
+using dpant;
+
+public partial class GroupMst : System.Web.UI.Page
+{
+    private int NewPageIndex
+    {
+        get { return (int)ViewState["NewPageIndex"]; }
+        set { ViewState["NewPageIndex"] = value; }
+    }
+
+    #region PageLoad
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        Session["SessTempGroupId"] = "";
+
+        if (!ClientScript.IsStartupScriptRegistered("redirect"))
+        {
+            if (Convert.ToString(Session["SessUserId"]) == "")
+            {
+                Response.Write("<script language='javascript'>alert('Your user session has timed out. Please login again.');window.top.location ='../Login.aspx';</script>");
+            }
+        }
+
+        if (!IsPostBack)
+        {
+            try
+            {
+                getProcName();
+                NewPageIndex = 0;
+                //SearchGroupMst();
+            }
+            catch (Exception ex)
+            {
+                GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
+            }
+        }
+    }
+    #endregion
+
+    #region Method
+
+    #region getProcName
+    private void getProcName()
+    {
+        try
+        {
+            ddProcName.DataSource = GlobalFunc.getProcName();
+            ddProcName.DataTextField = "Description";
+            ddProcName.DataValueField = "Code";
+            ddProcName.DataBind();
+            ddProcName.Items.Insert(0, " ");
+        }
+        catch (Exception ex)
+        {
+            GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
+        }
+    }
+    #endregion
+
+    #region SearchGroupMst
+    private void SearchGroupMst()
+    {
+        try
+        {
+            DataSet dsSearch = new DataSet();
+            DataTable dtSearch = new DataTable();
+
+            String strGroupID = Convert.ToString(txtGroupId.Text).Trim();
+            String strGroupName = Convert.ToString(txtGroupName.Text).Trim();
+            String strPlcNo = Convert.ToString(ddProcName.SelectedValue).Trim();
+            String strProcName = Convert.ToString(ddProcName.SelectedItem).Trim();
+
+            dsSearch = csDatabase.SrcGroupMst(strGroupID, strGroupName, strPlcNo, strProcName);
+            dtSearch = dsSearch.Tables[0];
+            BindGridView(dtSearch);
+        }
+        catch (Exception ex)
+        {
+            GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
+        }
+    }
+    #endregion
+
+    #region BindGridView
+    private bool BindGridView(DataTable dtGroupMst)
+    {
+        try
+        {
+            DataView dvGroupMst = new DataView(dtGroupMst);
+
+            gvGroupMst.DataSource = dvGroupMst;
+            gvGroupMst.PageIndex = NewPageIndex;
+            gvGroupMst.DataBind();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
+            return false;
+        }
+    }
+    #endregion
+
+    #region ClearAll
+    private void ClearAll()
+    {
+        try
+        {
+            txtGroupId.Text = "";
+            txtGroupName.Text = "";
+            ddProcName.SelectedIndex = 0;
+            SearchGroupMst();
+        }
+        catch (Exception ex)
+        {
+            GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
+        }
+    }
+    #endregion
+
+    #region Get Redirect Pass-Out
+    private String GetRedirectString()
+    {
+        String strGroupID = "";
+        String strGroupName = "";
+        String strPlcNo = "";
+        String strProcName = "";
+
+        if (Convert.ToString(txtGroupId.Text).Trim() != "") strGroupID = GlobalFunc.getReplaceToUrl(Convert.ToString(txtGroupId.Text));
+        if (Convert.ToString(txtGroupName.Text).Trim() != "") strGroupName = GlobalFunc.getReplaceToUrl(Convert.ToString(txtGroupName.Text));
+        if (Convert.ToString(ddProcName.SelectedValue).Trim() != "") strPlcNo = GlobalFunc.getReplaceToUrl(Convert.ToString(ddProcName.SelectedValue));
+        if (Convert.ToString(ddProcName.SelectedItem).Trim() != "") strProcName = GlobalFunc.getReplaceToUrl(Convert.ToString(ddProcName.SelectedItem));
+
+        String strRedirect = "GroupMstReg.aspx?";
+
+        strRedirect = strRedirect + "gid=" + strGroupID + "&";
+        strRedirect = strRedirect + "gnm=" + strGroupName + "&";
+        strRedirect = strRedirect + "pno=" + strPlcNo + "&";
+        strRedirect = strRedirect + "pnm=" + strProcName + "&";
+
+        return strRedirect;
+    }
+    #endregion
+
+    #endregion
+
+    #region Events
+
+    #region btnNewGroup
+    protected void btnNewGroup_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            Response.Redirect(GetRedirectString());
+        }
+        catch (Exception ex)
+        {
+            GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
+        }
+    }
+    #endregion
+
+    #region BtnClear
+    protected void btnClear_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            ClearAll();
+        }
+        catch (Exception ex)
+        {
+            GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
+        }
+    }
+    #endregion
+
+    #region BtnSearch
+    protected void btnSearch_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            NewPageIndex = 0;
+            SearchGroupMst();
+        }
+        catch (Exception ex)
+        {
+            GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
+        }
+    }
+    #endregion
+
+    #region gvGroupMst_RowDataBound
+    protected void gvGroupMst_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        try
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                LinkButton lb = (LinkButton)e.Row.Cells[7].Controls[0];
+                lb.OnClientClick = "return confirm('Confirm delete? ATTENTION : THIS WILL DELETE ALL BLOCK MASTER, RACK MASTER DATA REGISTERED UNDER CURRENT GROUP!');";
+            }
+        }
+        catch (Exception ex)
+        {
+            GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
+        }
+    }
+    #endregion
+
+    #region gvGroupMst_RowCommand
+    protected void gvGroupMst_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        try
+        {
+            Int32 index = Convert.ToInt32(e.CommandArgument);            
+
+            if (e.CommandName == "EditRecord")
+            {
+                GridViewRow selectedRow = ((GridView)e.CommandSource).Rows[index];
+                Session["SessTempGroupId"] = Convert.ToString(selectedRow.Cells[0].Text);
+                Session["SessTempPlcNo"] = Convert.ToString(selectedRow.Cells[2].Text);
+                Session["SessTempProcName"] = Convert.ToString(selectedRow.Cells[3].Text);
+                GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> attempted to edit Group ID['" + Convert.ToString(selectedRow.Cells[0].Text) + "'] Group Name['" + Convert.ToString(selectedRow.Cells[1].Text) + "'] PLC No['" + Convert.ToString(selectedRow.Cells[2].Text) + "'] Process Name['" + Convert.ToString(selectedRow.Cells[3].Text) + "']");
+                Response.Redirect(GetRedirectString());
+            }
+            if (e.CommandName == "DeleteRecord")
+            {
+                GridViewRow selectedRow = ((GridView)e.CommandSource).Rows[index];
+                String tmpGroupID = Convert.ToString(selectedRow.Cells[0].Text);
+                String tmpGroupName = Convert.ToString(selectedRow.Cells[1].Text);
+                String tmpPlcNo = Convert.ToString(selectedRow.Cells[2].Text);
+                String tmpProcName = Convert.ToString(selectedRow.Cells[3].Text);
+                GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> attempted to delete Group ID['" + Convert.ToString(selectedRow.Cells[0].Text) + "'] Group Name['" + Convert.ToString(selectedRow.Cells[1].Text) + "'] PLC No['" + Convert.ToString(selectedRow.Cells[2].Text) + "'] Process Name['" + Convert.ToString(selectedRow.Cells[3].Text) + "']");
+                Boolean blDeleteGroup = csDatabase.DelGroupMst(tmpGroupID, tmpPlcNo, tmpProcName, tmpGroupName);
+                if (blDeleteGroup)
+                {
+                    //csDatabase.DelGroupMstRem(tmpPlcNo, tmpProcName, tmpGroupID, tmpGroupName);
+                    GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> deleted Group ID['" + Convert.ToString(selectedRow.Cells[0].Text) + "'] Group Name['" + Convert.ToString(selectedRow.Cells[1].Text) + "'] PLC No['" + Convert.ToString(selectedRow.Cells[2].Text) + "'] Process Name['" + Convert.ToString(selectedRow.Cells[3].Text) + "']");
+                    GlobalFunc.ShowMessage("Group Master ID: " + tmpGroupID + " deleted.");
+                }
+                else
+                {
+                    GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> failed to deleted Group ID['" + Convert.ToString(selectedRow.Cells[0].Text) + "'] Group Name['" + Convert.ToString(selectedRow.Cells[1].Text) + "'] PLC No['" + Convert.ToString(selectedRow.Cells[2].Text) + "'] Process Name['" + Convert.ToString(selectedRow.Cells[3].Text) + "']");
+                    GlobalFunc.ShowErrorMessage("Unable to delete Group Master ID: " + tmpGroupID + ".");
+                }
+                SearchGroupMst();
+            }
+        }
+        catch (Exception ex)
+        {
+            GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
+        }
+    }
+    #endregion
+
+    #region Paging Index
+    protected void gvGroupMst_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        try
+        {
+            NewPageIndex = e.NewPageIndex;
+            SearchGroupMst();
+        }
+        catch (Exception ex)
+        {
+            GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
+        }
+    }
+    #endregion
+
+    #endregion
+}
