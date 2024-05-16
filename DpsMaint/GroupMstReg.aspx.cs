@@ -18,13 +18,14 @@ public partial class GroupMst : System.Web.UI.Page
         get { return (int)ViewState["NewPageIndex"]; }
         set { ViewState["NewPageIndex"] = value; }
     }
-    
+
     #region PageLoad
     protected void Page_Load(object sender, EventArgs e)
     {
         String tempGroupId = Convert.ToString(Session["SessTempGroupId"]);
         String tempPlcNo = Convert.ToString(Session["SessTempPlcNo"]);
         String tempProcName = Convert.ToString(Session["SessTempProcName"]);
+        String tempGroupLine = Convert.ToString(Session["SessTempGroupLine"]);
 
         if (!ClientScript.IsStartupScriptRegistered("redirect"))
         {
@@ -49,7 +50,7 @@ public partial class GroupMst : System.Web.UI.Page
                     DataSet dsGroupMst = new DataSet();
                     DataTable dtGroupMst = new DataTable();
 
-                    dsGroupMst = csDatabase.SrcGroupMst(Convert.ToString(tempGroupId), "", Convert.ToString(tempPlcNo), Convert.ToString(tempProcName));
+                    dsGroupMst = csDatabase.SrcGroupMst(Convert.ToString(tempGroupId), "", Convert.ToString(tempPlcNo), Convert.ToString(tempProcName), Convert.ToString(tempGroupLine));
                     dtGroupMst = dsGroupMst.Tables[0];
                     BindtoText(dtGroupMst);
                 }
@@ -107,6 +108,11 @@ public partial class GroupMst : System.Web.UI.Page
                     txtGroupName.Text = Convert.ToString(dt.Rows[0]["group_name"]).Trim();
                     lblTmpGroupName.Text = Convert.ToString(dt.Rows[0]["group_name"]).Trim();
                 }
+                if (Convert.ToString(dt.Rows[0]["group_line"]).Trim() != "")
+                {
+                    txtGroupLine.Text = Convert.ToString(dt.Rows[0]["group_line"]).Trim();
+                    //lblGroupLine.Text = Convert.ToString(dt.Rows[0]["group_line"]).Trim();
+                }
                 if (Convert.ToString(dt.Rows[0]["plc_no"]).Trim() != "")
                 {
                     ddProcName.SelectedValue = Convert.ToString(dt.Rows[0]["plc_no"]);
@@ -131,6 +137,7 @@ public partial class GroupMst : System.Web.UI.Page
             }
             txtGroupId.Text = "";
             txtGroupName.Text = "";
+            txtGroupLine.Text = "";
         }
         catch (Exception ex)
         {
@@ -162,13 +169,19 @@ public partial class GroupMst : System.Web.UI.Page
                 lblMsg.Visible = true;
                 return false;
             }
-            else if (csDatabase.ChkDuplicateGroupName(Convert.ToString(txtGroupName.Text), Convert.ToString(lblTmpGroupName.Text), Convert.ToString(ddProcName.SelectedItem)))
+            else if (Convert.ToString(txtGroupLine.Text) == "")
+            {
+                lblMsg.Text = "Please enter Group Line.";
+                lblMsg.Visible = true;
+                return false;
+            }
+            else if (csDatabase.ChkDuplicateGroupName(Convert.ToString(txtGroupName.Text), Convert.ToString(lblTmpGroupName.Text), Convert.ToString(ddProcName.SelectedItem), Convert.ToString(txtGroupLine.Text)))
             {
                 lblMsg.Text = "Duplicate Group Name is not allowed in same Process. Please check.";
                 lblMsg.Visible = true;
                 return false;
             }
-            else if (csDatabase.ChkDuplicateGroupID(Convert.ToString(txtGroupId.Text), Convert.ToString(lblTmpGroupId.Text), Convert.ToString(ddProcName.SelectedItem)))
+            else if (csDatabase.ChkDuplicateGroupID(Convert.ToString(txtGroupId.Text), Convert.ToString(lblTmpGroupId.Text), Convert.ToString(ddProcName.SelectedItem), Convert.ToString(txtGroupLine.Text)))
             {
                 lblMsg.Text = "Duplicate Group ID is not allowed in same Process. Please check.";
                 lblMsg.Visible = true;
@@ -196,16 +209,18 @@ public partial class GroupMst : System.Web.UI.Page
             String strGroupName = "";
             String strPlcNo = "";
             String strProcName = "";
+            String strGroupLine = "";
 
             if (Convert.ToString(Request.QueryString["gid"]) != "") strGroupID = GlobalFunc.getReplaceFrmUrl(Convert.ToString(Request.QueryString["gid"]));
             if (Convert.ToString(Request.QueryString["gnm"]) != "") strGroupName = GlobalFunc.getReplaceFrmUrl(Convert.ToString(Request.QueryString["gnm"]));
             if (Convert.ToString(Request.QueryString["pno"]) != "") strPlcNo = GlobalFunc.getReplaceFrmUrl(Convert.ToString(Request.QueryString["pno"]));
             if (Convert.ToString(Request.QueryString["pnm"]) != "") strProcName = GlobalFunc.getReplaceFrmUrl(Convert.ToString(Request.QueryString["pnm"]));
+            if (Convert.ToString(Request.QueryString["gln"]) != "") strGroupLine = GlobalFunc.getReplaceFrmUrl(Convert.ToString(Request.QueryString["gln"]));
 
             DataSet dsSearch = new DataSet();
             DataTable dtSearch = new DataTable();
 
-            dsSearch = csDatabase.SrcGroupMst(strGroupID, strGroupName, strPlcNo, strProcName);
+            dsSearch = csDatabase.SrcGroupMst(strGroupID, strGroupName, strPlcNo, strProcName, strGroupLine);
             dtSearch = dsSearch.Tables[0];
 
             DataView dvGroupMst = new DataView(dtSearch);
@@ -238,7 +253,8 @@ public partial class GroupMst : System.Web.UI.Page
                 String strPlcNo = Convert.ToString(ddProcName.SelectedValue);
                 String strProcName = Convert.ToString(ddProcName.SelectedItem);
                 String strCurUser = Convert.ToString(Session["SessUserId"]);
-                
+                String strGroupLine = Convert.ToString(txtGroupLine.Text);
+
                 if (csDatabase.ChkGroupMaxCnt(strProcName))
                 {
                     Response.Write("<script language='javascript'>alert('Maximum Limit Group Count of 6 per Process reached. Please delete/edit unused group.')</script>");
@@ -248,14 +264,14 @@ public partial class GroupMst : System.Web.UI.Page
                 string confirmValue = Request.Form["confirm_value"];
                 if (confirmValue == "Yes")
                 {
-                    Boolean tmpFlag = csDatabase.SvGroupMst(strGroupID, strGroupName, strPlcNo, strProcName, strCurUser);
+                    Boolean tmpFlag = csDatabase.SvGroupMst(strGroupID, strGroupName, strPlcNo, strProcName, strCurUser, strGroupLine);
                     if (!tmpFlag)
                     {
                         GlobalFunc.ShowErrorMessage("Unable to save Group ID: " + strGroupID + " .");
                     }
                     else
                     {
-                        GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> created Group ID['" + strGroupID + "'] Group Name['" + strGroupName + "'] PLC No['" + strPlcNo + "'] Process Name['" + strProcName + "']");
+                        GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> created Group ID['" + strGroupID + "'] Group Name['" + strGroupName + "'] PLC No['" + strPlcNo + "'] Process Name['" + strProcName + "'] Group Line['" + strGroupLine + "']");
                         ClientScriptManager CSM = Page.ClientScript;
                         string strconfirm = "<script>if(!window.alert('Group ID: " + strGroupID + " saved.')){window.location.href='GroupMst.aspx'}</script>";
                         CSM.RegisterClientScriptBlock(this.GetType(), "Confirm", strconfirm, false);
@@ -299,11 +315,12 @@ public partial class GroupMst : System.Web.UI.Page
                 String tempGroupID = Convert.ToString(lblTmpGroupId.Text);
                 String tempGroupName = Convert.ToString(lblTmpGroupName.Text);
                 String strCurUser = Convert.ToString(Session["SessUserId"]);
-                
+                String strGroupLine = Convert.ToString(txtGroupLine.Text);
+
                 string confirmValue = Request.Form["confirm_value"];
                 if (confirmValue == "Yes")
                 {
-                    Boolean tmpFlag = csDatabase.UpdGroupMst(strGroupID, strGroupName, strPlcNo, strProcName, tempGroupID, strCurUser, tempGroupName);
+                    Boolean tmpFlag = csDatabase.UpdGroupMst(strGroupID, strGroupName, strPlcNo, strProcName, tempGroupID, strCurUser, tempGroupName, strGroupLine);
                     if (!tmpFlag)
                     {
                         GlobalFunc.ShowErrorMessage("Unable to update Group ID: " + tempGroupID + " .");
@@ -311,7 +328,7 @@ public partial class GroupMst : System.Web.UI.Page
                     else
                     {
                         //csDatabase.UpdGroupMstRem(strPlcNo, strProcName, strGroupID, strGroupName, tempGroupID, tempGroupName);
-                        GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> updated ['" + tempGroupID + "'] to Group ID['" + strGroupID + "'] Group Name['" + strGroupName + "'] PLC No['" + strPlcNo + "'] Process Name['" + strProcName + "']");
+                        GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> updated ['" + tempGroupID + "'] to Group ID['" + strGroupID + "'] Group Name['" + strGroupName + "'] PLC No['" + strPlcNo + "'] Process Name['" + strProcName + "'] Group Line['" + strGroupLine + "']");
                         ClientScriptManager CSM = Page.ClientScript;
                         string strconfirm = "<script>if(!window.alert('Group ID: " + strGroupID + " updated.')){window.location.href='GroupMst.aspx'}</script>";
                         CSM.RegisterClientScriptBlock(this.GetType(), "Confirm", strconfirm, false);

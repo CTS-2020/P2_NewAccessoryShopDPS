@@ -438,7 +438,7 @@ public partial class PlcConvMst : System.Web.UI.Page
                         String strFontColor = csDatabase.GetPartsFontColor(tmpAisVal[5], tmpAisVal[6]);
 
                         hlAisData.Text = tmpAisVal[4] + "</br>" +
-                            //"Row No : " + tmpAisVal[1] + "    Col No : " + tmpAisVal[2] + "</br>" +
+                                         //"Row No : " + tmpAisVal[1] + "    Col No : " + tmpAisVal[2] + "</br>" +
                                          tmpAisVal[5] + " - " + tmpAisVal[5] + "</br>" +
                                           "<p style='text-align:center;'><font face='arial' size='6' color='" + strFontColor + "'><span style='background-color:" + strBgColor + ";'>&nbsp;" + strSymbol + "&nbsp;</span></font></p></br>";
                     }
@@ -690,7 +690,7 @@ public partial class PlcConvMst : System.Web.UI.Page
     #region Submit Instruction Code List
     protected Boolean SubmitInsCodeList(String strPlcNo, String strProcName, String strGroupName, String strBlockName, String strInsCode)
     {
-    
+
         #region Initialize Variables
         String strStartDeviceName;
         String strPlcStatus;
@@ -731,6 +731,7 @@ public partial class PlcConvMst : System.Web.UI.Page
         String byteComment = "";
         String tmpGroupId = "";
         String tmpGroupName = "";
+        String tmpGroupLine = "";
         #endregion
 
 
@@ -759,8 +760,12 @@ public partial class PlcConvMst : System.Web.UI.Page
                 {
                     tmpGroupName = Convert.ToString(dtGmSearch.Rows[iGmCnt]["group_name"]).Trim();
                 }
+                if (Convert.ToString(dtGmSearch.Rows[iGmCnt]["group_line"]).Trim() != "")
+                {
+                    tmpGroupLine = Convert.ToString(dtGmSearch.Rows[iGmCnt]["group_line"]).Trim();
+                }
 
-                Boolean blSvGroupMstConv = csDatabase.SvGroupMstConv(strPlcNo, strProcName, tmpGroupId, tmpGroupName);
+                Boolean blSvGroupMstConv = csDatabase.SvGroupMstConv(strPlcNo, strProcName, tmpGroupId, tmpGroupName, tmpGroupLine);
 
                 if (blSvGroupMstConv == false)
                 {
@@ -830,7 +835,7 @@ public partial class PlcConvMst : System.Web.UI.Page
         dsBmSearch = new DataSet();
         dtBmSearch = new DataTable();
 
-       
+
 
         dsBmSearch = csDatabase.SrcBlockMst(strPlcNo, "", strBlockName, "", "", "", strProcName, strGroupName, "", "");
         dsBmSearch.Tables[0].DefaultView.Sort = "gw_no ASC";
@@ -967,11 +972,11 @@ public partial class PlcConvMst : System.Web.UI.Page
                 dtLmSearch = dsLmSearch.Tables[0];
 
                 int RunPhyAdd = 2;
-                
+
 
                 if (dtLmSearch.Rows.Count > 0)
                 {
-                   
+
                     csDatabase.DeleteLmRackMode(strPlcNo, strProcName, tmpGwNo);
 
                     for (iLmCnt = 0; iLmCnt < dtLmSearch.Rows.Count; iLmCnt++)
@@ -1141,17 +1146,17 @@ public partial class PlcConvMst : System.Web.UI.Page
                 dtLmRack = dsLmRack.Tables[0];
 
 
-                if (ConvType=="1")
+                if (ConvType == "1")
                 {
                     dsLmInsSearch = csDatabase.SrcLmAddPerBlock(strPlcNo, strProcName, strBlockName);
                     dtLmInsSearch = dsLmInsSearch.Tables[0];
                 }
-                else if(ConvType == "2")
+                else if (ConvType == "2")
                 {
                     dsLmInsSearch = csDatabase.InitialiaseTempLapMappingData(strPlcNo, strProcName, strBlockName, tmpInsCode);
                     dtLmInsSearch = dsLmInsSearch.Tables[0];
                 }
-               
+
                 if ((dtLmInsSearch.Rows.Count > 0) && (dtLmRack.Rows.Count > 0))
                 {
                     tmpInsCodeMap = "0" + "0";
@@ -1253,15 +1258,29 @@ public partial class PlcConvMst : System.Web.UI.Page
                         lstGroupMst.Add(Convert.ToInt16(0));
                     }
                 }
+                if (Convert.ToString(dtGmConvSearch.Rows[iGmCnt]["group_line"]).Trim() != "")
+                {
+                    tmpGroupLine = Convert.ToString(dtGmConvSearch.Rows[iGmCnt]["group_line"]).Trim();
+                    short[] sGroupLine = GlobalFunc.convStrToAscii(tmpGroupLine, 1);
+
+                    foreach (short element in sGroupLine)
+                    {
+                        lstGroupMst.Add(element);
+                    }
+                }
+                else
+                {
+                    lstGroupMst.Add(Convert.ToInt16(0));
+                }
             }
 
-           
+
 
             while (lstGroupMst.Count < iTotArrayCount)
             {
                 lstGroupMst.Add(Convert.ToInt16(0));
             }
-          
+
             strPlcStatus = PlcConnQuery.WriteDeviceByBlock(strStartDeviceName, iTotArrayCount, lstGroupMst, iLsn);
             if (strPlcStatus != "")
             {

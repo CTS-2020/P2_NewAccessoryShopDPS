@@ -80,8 +80,9 @@ public partial class GroupMst : System.Web.UI.Page
             String strGroupName = Convert.ToString(txtGroupName.Text).Trim();
             String strPlcNo = Convert.ToString(ddProcName.SelectedValue).Trim();
             String strProcName = Convert.ToString(ddProcName.SelectedItem).Trim();
+            String strGroupLine = Convert.ToString(txtGroupLine.Text).Trim();
 
-            dsSearch = csDatabase.SrcGroupMst(strGroupID, strGroupName, strPlcNo, strProcName);
+            dsSearch = csDatabase.SrcGroupMst(strGroupID, strGroupName, strPlcNo, strProcName, strGroupLine);
             dtSearch = dsSearch.Tables[0];
             BindGridView(dtSearch);
         }
@@ -119,6 +120,7 @@ public partial class GroupMst : System.Web.UI.Page
         {
             txtGroupId.Text = "";
             txtGroupName.Text = "";
+            txtGroupLine.Text = "";
             ddProcName.SelectedIndex = 0;
             SearchGroupMst();
         }
@@ -136,11 +138,13 @@ public partial class GroupMst : System.Web.UI.Page
         String strGroupName = "";
         String strPlcNo = "";
         String strProcName = "";
+        String strGroupLine = "";
 
         if (Convert.ToString(txtGroupId.Text).Trim() != "") strGroupID = GlobalFunc.getReplaceToUrl(Convert.ToString(txtGroupId.Text));
         if (Convert.ToString(txtGroupName.Text).Trim() != "") strGroupName = GlobalFunc.getReplaceToUrl(Convert.ToString(txtGroupName.Text));
         if (Convert.ToString(ddProcName.SelectedValue).Trim() != "") strPlcNo = GlobalFunc.getReplaceToUrl(Convert.ToString(ddProcName.SelectedValue));
         if (Convert.ToString(ddProcName.SelectedItem).Trim() != "") strProcName = GlobalFunc.getReplaceToUrl(Convert.ToString(ddProcName.SelectedItem));
+        if (Convert.ToString(txtGroupLine.Text).Trim() != "") strGroupLine = GlobalFunc.getReplaceToUrl(Convert.ToString(txtGroupLine.Text));
 
         String strRedirect = "GroupMstReg.aspx?";
 
@@ -148,6 +152,7 @@ public partial class GroupMst : System.Web.UI.Page
         strRedirect = strRedirect + "gnm=" + strGroupName + "&";
         strRedirect = strRedirect + "pno=" + strPlcNo + "&";
         strRedirect = strRedirect + "pnm=" + strProcName + "&";
+        strRedirect = strRedirect + "gln=" + strGroupLine + "&";
 
         return strRedirect;
     }
@@ -207,7 +212,7 @@ public partial class GroupMst : System.Web.UI.Page
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                LinkButton lb = (LinkButton)e.Row.Cells[7].Controls[0];
+                LinkButton lb = (LinkButton)e.Row.Cells[GROUPMST_COLUMN.Delete].Controls[0];
                 lb.OnClientClick = "return confirm('Confirm delete? ATTENTION : THIS WILL DELETE ALL BLOCK MASTER, RACK MASTER DATA REGISTERED UNDER CURRENT GROUP!');";
             }
         }
@@ -223,35 +228,37 @@ public partial class GroupMst : System.Web.UI.Page
     {
         try
         {
-            Int32 index = Convert.ToInt32(e.CommandArgument);            
+            Int32 index = Convert.ToInt32(e.CommandArgument);
 
             if (e.CommandName == "EditRecord")
             {
                 GridViewRow selectedRow = ((GridView)e.CommandSource).Rows[index];
-                Session["SessTempGroupId"] = Convert.ToString(selectedRow.Cells[0].Text);
-                Session["SessTempPlcNo"] = Convert.ToString(selectedRow.Cells[2].Text);
-                Session["SessTempProcName"] = Convert.ToString(selectedRow.Cells[3].Text);
-                GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> attempted to edit Group ID['" + Convert.ToString(selectedRow.Cells[0].Text) + "'] Group Name['" + Convert.ToString(selectedRow.Cells[1].Text) + "'] PLC No['" + Convert.ToString(selectedRow.Cells[2].Text) + "'] Process Name['" + Convert.ToString(selectedRow.Cells[3].Text) + "']");
+                Session["SessTempGroupId"] = Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Group_ID].Text);
+                Session["SessTempPlcNo"] = Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.PLC_No].Text);
+                Session["SessTempProcName"] = Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Process_Name].Text);
+                Session["SessTempGroupLine"] = Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Group_Line].Text);
+                GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> attempted to edit Group ID['" + Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Group_ID].Text) + "'] Group Name['" + Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Group_Name].Text) + "'] PLC No['" + Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.PLC_No].Text) + "'] Process Name['" + Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Process_Name].Text) + "'] Group Line['" + Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Group_Line].Text) + "']");
                 Response.Redirect(GetRedirectString());
             }
             if (e.CommandName == "DeleteRecord")
             {
                 GridViewRow selectedRow = ((GridView)e.CommandSource).Rows[index];
-                String tmpGroupID = Convert.ToString(selectedRow.Cells[0].Text);
-                String tmpGroupName = Convert.ToString(selectedRow.Cells[1].Text);
-                String tmpPlcNo = Convert.ToString(selectedRow.Cells[2].Text);
-                String tmpProcName = Convert.ToString(selectedRow.Cells[3].Text);
-                GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> attempted to delete Group ID['" + Convert.ToString(selectedRow.Cells[0].Text) + "'] Group Name['" + Convert.ToString(selectedRow.Cells[1].Text) + "'] PLC No['" + Convert.ToString(selectedRow.Cells[2].Text) + "'] Process Name['" + Convert.ToString(selectedRow.Cells[3].Text) + "']");
-                Boolean blDeleteGroup = csDatabase.DelGroupMst(tmpGroupID, tmpPlcNo, tmpProcName, tmpGroupName);
+                String tmpGroupID = Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Group_ID].Text);
+                String tmpGroupName = Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Group_Name].Text);
+                String tmpPlcNo = Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.PLC_No].Text);
+                String tmpProcName = Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Process_Name].Text);
+                String tempGroupLine = Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Group_Line].Text);
+                GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> attempted to delete Group ID['" + Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Group_ID].Text) + "'] Group Name['" + Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Group_Name].Text) + "'] PLC No['" + Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.PLC_No].Text) + "'] Process Name['" + Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Process_Name].Text) + "'] Group Line['" + Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Group_Line].Text) + "']");
+                Boolean blDeleteGroup = csDatabase.DelGroupMst(tmpGroupID, tmpPlcNo, tmpProcName, tmpGroupName, tempGroupLine);
                 if (blDeleteGroup)
                 {
                     //csDatabase.DelGroupMstRem(tmpPlcNo, tmpProcName, tmpGroupID, tmpGroupName);
-                    GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> deleted Group ID['" + Convert.ToString(selectedRow.Cells[0].Text) + "'] Group Name['" + Convert.ToString(selectedRow.Cells[1].Text) + "'] PLC No['" + Convert.ToString(selectedRow.Cells[2].Text) + "'] Process Name['" + Convert.ToString(selectedRow.Cells[3].Text) + "']");
+                    GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> deleted Group ID['" + Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Group_ID].Text) + "'] Group Name['" + Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Group_Name].Text) + "'] PLC No['" + Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.PLC_No].Text) + "'] Process Name['" + Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Process_Name].Text) + "']");
                     GlobalFunc.ShowMessage("Group Master ID: " + tmpGroupID + " deleted.");
                 }
                 else
                 {
-                    GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> failed to deleted Group ID['" + Convert.ToString(selectedRow.Cells[0].Text) + "'] Group Name['" + Convert.ToString(selectedRow.Cells[1].Text) + "'] PLC No['" + Convert.ToString(selectedRow.Cells[2].Text) + "'] Process Name['" + Convert.ToString(selectedRow.Cells[3].Text) + "']");
+                    GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> failed to deleted Group ID['" + Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Group_ID].Text) + "'] Group Name['" + Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Group_Name].Text) + "'] PLC No['" + Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.PLC_No].Text) + "'] Process Name['" + Convert.ToString(selectedRow.Cells[GROUPMST_COLUMN.Process_Name].Text) + "']");
                     GlobalFunc.ShowErrorMessage("Unable to delete Group Master ID: " + tmpGroupID + ".");
                 }
                 SearchGroupMst();
@@ -280,4 +287,19 @@ public partial class GroupMst : System.Web.UI.Page
     #endregion
 
     #endregion
+
+
+}
+
+public static class GROUPMST_COLUMN
+{
+    public static readonly int Group_ID = 0;
+    public static readonly int Group_Name = 1;
+    public static readonly int Group_Line = 2;
+    public static readonly int PLC_No = 3;
+    public static readonly int Process_Name = 4;
+    public static readonly int Last_Updated_By = 5;
+    public static readonly int Last_Updated_DateTime = 6;
+    public static readonly int Edit = 7;
+    public static readonly int Delete = 8;
 }

@@ -66,7 +66,8 @@
                     <td colspan="4" class="alignRight">
                         <asp:Button ID="btnNewLmAdd" runat="server" CssClass="button" Text="Create" OnClick="btnNewLmAdd_Click" OnClientClick="Confirm('Confirm to save?')"/>
                         <asp:Button ID="btnUpdate" runat="server" Text="Update" CssClass="button" OnClick="btnUpdate_Click" Visible="false" OnClientClick="Confirm('Confirm to update?')"/>
-                        <asp:Button ID="btnClear" runat="server" Text="Clear" CssClass="button" OnClick="btnClear_Click"/>                        <asp:Button ID="btnCancel" runat="server" CssClass="button" Text="Cancel" OnClick="btnCancel_Click"/>
+                        <asp:Button ID="btnClear" runat="server" Text="Clear" CssClass="button" OnClick="btnClear_Click"/>
+                        <asp:Button ID="btnCancel" runat="server" CssClass="button" Text="Cancel" OnClick="btnCancel_Click"/>
                     </td>
                 </tr>
                 <tr>

@@ -196,42 +196,67 @@
 	public const int 	GOT_PLCIF_BUS		        =	90;			// BUS
 
 	///ACTPROGTYPE UNITTYPE
-	public const int	UNIT_QNCPU				=	0x13;			// QnCPU(Qnﾓｰﾄﾞ)RS232C直結
-	public const int	UNIT_FXCPU				=	0x0F;			// FXCPU直結
-	public const int	UNIT_LNCPU				=	0x50;			// LnCPU RS232Cアダプタ接続
-	public const int	UNIT_QNMOTION			=	0x1C;			// QnﾓｰｼｮﾝRS232C直結
-	public const int	UNIT_QJ71C24			=	0x19;			// Qn用C24ﾕﾆｯﾄ
+	public const int	UNIT_QNCPU				=	0x13;			// QnCPU(Qnﾓｰﾄﾞ)RS232C直結
+
+	public const int	UNIT_FXCPU				=	0x0F;			// FXCPU直結
+
+	public const int	UNIT_LNCPU				=	0x50;			// LnCPU RS232Cアダプタ接続
+
+	public const int	UNIT_QNMOTION			=	0x1C;			// QnﾓｰｼｮﾝRS232C直結
+
+	public const int	UNIT_QJ71C24			=	0x19;			// Qn用C24ﾕﾆｯﾄ
+
 	public const int	UNIT_FX485BD			=	0x24;			// FXCPU計算機リンク(RS485接続)
-	public const int	UNIT_LJ71C24			=	0x54;			// L用C24ﾕﾆｯﾄ直結
-	public const int	UNIT_QJ71E71			=	0x1A;			// Qn用E71ﾕﾆｯﾄ
-	public const int	UNIT_FXENET				=	0x26;			// FX3U用Ethernetユニット
+	public const int	UNIT_LJ71C24			=	0x54;			// L用C24ﾕﾆｯﾄ直結
+
+	public const int	UNIT_QJ71E71			=	0x1A;			// Qn用E71ﾕﾆｯﾄ
+
+	public const int	UNIT_FXENET				=	0x26;			// FX3U用Ethernetユニット
+
 	public const int	UNIT_FXENET_ADP			=	0x27;			// FX1N-ENET-ADP
 	public const int	UNIT_QNETHER			=	0x2C;			// QnCPU(Qnﾓｰﾄﾞ)Ether直結 IP指定通信
 	public const int	UNIT_QNETHER_DIRECT		=	0x2D;			// QnCPU(Qnﾓｰﾄﾞ)Ether直結 直結通信
-	public const int	UNIT_LNETHER			=	0x52;			// LnCPU Ethernetﾎﾟｰﾄ接続
-	public const int	UNIT_LNETHER_DIRECT 	=	0x53;			// LnCPU Ethernetﾎﾟｰﾄ直結接続
-	public const int	UNIT_NZ2GF_ETB			=	0x59;			// NZ2GF-ETB(Ethernetアダプタ)接続
-	public const int	UNIT_NZ2GF_ETB_DIRECT	=	0x5A;			// NZ2GF-ETB(Ethernetアダプタ)直結接続
-	public const int	UNIT_QNUSB				=	0x16;			// QnCPU(Qnﾓｰﾄﾞ)USB直結
-	public const int	UNIT_LNUSB				=	0x51;			// LnCPU USBﾎﾟｰﾄ直結
-	public const int	UNIT_QNMOTIONUSB		=	0x1D;			// QnﾓｰｼｮﾝUSB直結
+	public const int	UNIT_LNETHER			=	0x52;			// LnCPU Ethernetﾎﾟｰﾄ接続
+
+	public const int	UNIT_LNETHER_DIRECT 	=	0x53;			// LnCPU Ethernetﾎﾟｰﾄ直結接続
+
+	public const int	UNIT_NZ2GF_ETB			=	0x59;			// NZ2GF-ETB(Ethernetアダプタ)接続
+
+	public const int	UNIT_NZ2GF_ETB_DIRECT	=	0x5A;			// NZ2GF-ETB(Ethernetアダプタ)直結接続
+
+	public const int	UNIT_QNUSB				=	0x16;			// QnCPU(Qnﾓｰﾄﾞ)USB直結
+
+	public const int	UNIT_LNUSB				=	0x51;			// LnCPU USBﾎﾟｰﾄ直結
+
+	public const int	UNIT_QNMOTIONUSB		=	0x1D;			// QnﾓｰｼｮﾝUSB直結
+
 	public const int	UNIT_G4QNCPU			=	0x1B;			// AJ65BT-G4-S3ユニット直結(Qnアクセス)
-	public const int	UNIT_CCLINKBOARD		=	0x0C;			// CC-Linkﾎﾞｰﾄﾞ
-	public const int	UNIT_MNETHBOARD			=	0x1E;			// MNET/Hﾎﾞｰﾄﾞ接続
-	public const int	UNIT_MNETGBOARD			=	0x2B;			// CC-Link IE ｺﾝﾄﾛｰﾗﾈｯﾄﾜｰｸ ﾎﾞｰﾄﾞ接続
-	public const int	UNIT_CCIEFBOARD			=	0x2F;			// CC-Link IEフィールドボード
-	public const int	UNIT_SIMULATOR			=	0x0B;			// シミュレータ（GX Simulator）接続
+	public const int	UNIT_CCLINKBOARD		=	0x0C;			// CC-Linkﾎﾞｰﾄﾞ
+
+	public const int	UNIT_MNETHBOARD			=	0x1E;			// MNET/Hﾎﾞｰﾄﾞ接続
+
+	public const int	UNIT_MNETGBOARD			=	0x2B;			// CC-Link IE ｺﾝﾄﾛｰﾗﾈｯﾄﾜｰｸ ﾎﾞｰﾄﾞ接続
+
+	public const int	UNIT_CCIEFBOARD			=	0x2F;			// CC-Link IEフィールドボード
+
+	public const int	UNIT_SIMULATOR			=	0x0B;			// シミュレータ（GX Simulator）接続
+
 	public const int	UNIT_SIMULATOR2			=	0x30;			// GX Simulator2
 	public const int	UNIT_QBF				=	0x1F;			// Qn用パソコンCPU
 	public const int	UNIT_QSS				=	0x20;			// Qn用SoftLogic
 	public const int	UNIT_A900GOT			=	0x21;			// GOT
 	public const int	UNIT_GOT_QJ71E71		=	0x40;			// GOT1000 Ethernetトランスペアレント QJ71E71
 	public const int	UNIT_GOT_QNETHER		=	0x41;			// GOT1000 Ethernetトランスペアレント Ethernet内蔵Qn
-	public const int	UNIT_GOT_LNETHER		=	0x55;			// GOT1000ｼﾘｰｽﾞ経由LnCPU Ethernetﾎﾟｰﾄ接続
-	public const int	UNIT_GOT_NZ2GF_ETB		=	0x5B;			// GOT1000ｼﾘｰｽﾞ経由NZ2GF-ETB(Ethernetアダプタ)接続
-	public const int	UNIT_GOTETHER_QNCPU		=	0x56;			// GOT1000ｼﾘｰｽﾞEthernetﾎﾟｰﾄ経由QnCPU-RS422ﾎﾟｰﾄ接続
-	public const int	UNIT_GOTETHER_QBUS		=	0x58;			// GOT1000ｼﾘｰｽﾞEthernetﾎﾟｰﾄ経由Qﾊﾞｽ接続
-	public const int	UNIT_GOTETHER_LNCPU		=	0x57;			// GOT1000ｼﾘｰｽﾞEthernetﾎﾟｰﾄ経由LnCPU RS232Cアダプタ接続
+	public const int	UNIT_GOT_LNETHER		=	0x55;			// GOT1000ｼﾘｰｽﾞ経由LnCPU Ethernetﾎﾟｰﾄ接続
+
+	public const int	UNIT_GOT_NZ2GF_ETB		=	0x5B;			// GOT1000ｼﾘｰｽﾞ経由NZ2GF-ETB(Ethernetアダプタ)接続
+
+	public const int	UNIT_GOTETHER_QNCPU		=	0x56;			// GOT1000ｼﾘｰｽﾞEthernetﾎﾟｰﾄ経由QnCPU-RS422ﾎﾟｰﾄ接続
+
+	public const int	UNIT_GOTETHER_QBUS		=	0x58;			// GOT1000ｼﾘｰｽﾞEthernetﾎﾟｰﾄ経由Qﾊﾞｽ接続
+
+	public const int	UNIT_GOTETHER_LNCPU		=	0x57;			// GOT1000ｼﾘｰｽﾞEthernetﾎﾟｰﾄ経由LnCPU RS232Cアダプタ接続
+
 	public const int	UNIT_FXETHER			=	0x4A;			// EthernetADP接続(ハブ経由)FXCPU
 	public const int	UNIT_FXETHER_DIRECT		=	0x4B;			// EthernetADP接続(直結) FXCPU
 	public const int	UNIT_GOTETHER_FXCPU		=	0x60;			// Ethernet(GOTトランスペアレント)－FXCPU

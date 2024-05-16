@@ -85,6 +85,29 @@ public class GlobalFunc
     }
     #endregion
 
+    #region ReplaceSingleQuotes
+    public static string ReplaceSingleQuotes(string input)
+    {
+        return input.Replace("'", "''");
+    }
+    #endregion
+
+    #region ReplaceEmptyStringToNull
+    public static string ReplaceEmptyStringToNull(string input)
+    {
+        input = input.Replace("&nbsp;", "");
+        return string.IsNullOrWhiteSpace(input) ? null : input;
+    }
+    #endregion
+
+    #region ReplaceToEmptyString
+    public static string ReplaceToEmptyString(string input)
+    {
+        input = input.Replace("&nbsp;", "");
+        return input;
+    }
+    #endregion
+
     #region ASCII Conversion
     public static short[] convStrToAscii(String arrDeviceValue, int iDeviceSize)
     {
