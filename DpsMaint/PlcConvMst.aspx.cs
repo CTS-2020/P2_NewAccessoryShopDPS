@@ -1244,7 +1244,7 @@ public partial class PlcConvMst : System.Web.UI.Page
                 if (Convert.ToString(dtGmConvSearch.Rows[iGmCnt]["group_name"]).Trim() != "")
                 {
                     tmpGroupName = Convert.ToString(dtGmConvSearch.Rows[iGmCnt]["group_name"]).Trim();
-                    short[] sGroupName = GlobalFunc.convStrToAscii(tmpGroupName, 9);
+                    short[] sGroupName = GlobalFunc.convStrToAscii(tmpGroupName, 8);
 
                     foreach (short element in sGroupName)
                     {
@@ -1253,7 +1253,7 @@ public partial class PlcConvMst : System.Web.UI.Page
                 }
                 else
                 {
-                    for (int i = 0; i < 9; i++)
+                    for (int i = 0; i < 8; i++)
                     {
                         lstGroupMst.Add(Convert.ToInt16(0));
                     }

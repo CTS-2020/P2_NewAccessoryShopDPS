@@ -38,7 +38,7 @@
                             <span class="titlemain"><asp:Label ID="Label1" runat="server" Text="Digital Picking System"></asp:Label></span>
                         </td>
                         <td style="width:4%; padding-left: 7px;">
-                            <img src="styles/images/PGMlogo.png" alt="" width="150px"/>
+                            <%--<img src="styles/images/PGMlogo.png" alt="" width="150px"/>--%>
                         </td>
                     </tr>
                     <tr>

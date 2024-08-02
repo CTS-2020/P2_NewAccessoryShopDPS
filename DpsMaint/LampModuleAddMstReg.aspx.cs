@@ -355,12 +355,12 @@ public partial class LampModuleAddMst : System.Web.UI.Page
                 lblMsg.Visible = true;
                 return false;
             }
-            else if (ddModuleName.SelectedIndex == 0)
-            {
-                lblMsg.Text = "Please select Module Name.";
-                lblMsg.Visible = true;
-                return false;
-            }
+            //else if (ddModuleName.Items.Count > 1 && ddModuleName.SelectedIndex == 0)
+            //{
+            //    lblMsg.Text = "Please select Module Name.";
+            //    lblMsg.Visible = true;
+            //    return false;
+            //}
             //else if (txtModuleName.Text.Length > 20)
             //{
             //    lblMsg.Text = "Module Name cannot be more than 20 characters.";

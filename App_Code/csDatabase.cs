@@ -4832,10 +4832,10 @@ public class csDatabase
         }
     }
 
-    public static Boolean ChkAllDuplicateGWNoGearUp(String strPlcNo, String strGwNo, String strLine)
+    public static Boolean ChkAllDuplicateGWNoGearUp(String strPlcNo, String strGwNo, String strLine, String strLmPhyAddr)
     {
 
-        String sqlQuery = "SELECT COUNT(*) AS CountRow FROM GearUpLm WHERE PlcNo = '" + strPlcNo + "' AND GwNo = '" + strGwNo + "' ";
+        String sqlQuery = "SELECT COUNT(*) AS CountRow FROM GearUpLm WHERE PlcNo = '" + strPlcNo + "' AND GwNo = '" + strGwNo + "' AND LmPhysicalAddress = " + strLmPhyAddr + "";
 
         try
         {

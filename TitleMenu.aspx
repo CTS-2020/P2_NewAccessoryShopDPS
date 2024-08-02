@@ -21,7 +21,7 @@
                 <span class="titlemain"><asp:Label ID="lblTitle" font-size="34px" runat="server" Text="Digital Picking System" ></asp:Label></span>
             </td>
             <td style="width:15%; padding-left: 7px;" rowspan="2">
-                <img src="styles/images/PGMlogo.png" alt="" width="150px"/>
+                <%--<img src="styles/images/PGMlogo.png" alt="" width="150px"/>--%>
             </td>
             <td style="width:10%; padding-right: 3px; padding-top: 3px;" class="alignRight">
                 <asp:Button ID="Button1" runat="server" CssClass="button" Text="Home" OnClick="btnHome_Click"/>

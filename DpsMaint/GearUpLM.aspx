@@ -47,7 +47,7 @@
                     <td class="tdfield" style="width: 20%; height: 28px">
                         <asp:Label ID="lblPartId" runat="server" Text="Part ID"></asp:Label></td>
                     <td class="tdtextbox" style="width: 30%; height: 28px">
-                        <asp:TextBox ID="txtPartId" runat="server" CssClass="TextboxLongStyle" MaxLength="5"></asp:TextBox></td>
+                        <asp:TextBox ID="txtPartId" runat="server" CssClass="TextboxLongStyle" MaxLength="10"></asp:TextBox></td>
                 </tr>
                 <tr>
 

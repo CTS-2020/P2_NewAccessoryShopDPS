@@ -78,6 +78,23 @@ public partial class DpsMaint_GearUpLMReg : System.Web.UI.Page
     }
 
     #region Method
+    #region getLineType
+    private void getLineType()
+    {
+        try
+        {
+            //ddLineType.DataSource = GlobalFunc.getLineType();
+            //ddLineType.DataTextField = "Description";
+            //ddLineType.DataValueField = "Description";
+            //ddLineType.DataBind();
+            //ddLineType.Items.Insert(0, " ");
+        }
+        catch (Exception ex)
+        {
+            GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
+        }
+    }
+    #endregion
 
     #region getProcName
     private void getProcName()
@@ -300,16 +317,16 @@ public partial class DpsMaint_GearUpLMReg : System.Web.UI.Page
             }
             else if ((Convert.ToString(txt_PhysAddr.Text) != "") && ((Convert.ToInt32(txt_PhysAddr.Text.Trim()) < 1) || (Convert.ToInt32(txt_PhysAddr.Text.Trim()) > 64)))
             {
-                lblMsg.Text = "Please enter Lamp Physicall Address within range (1~64).";
+                lblMsg.Text = "Please enter Lamp Physical Address within range (1~64).";
                 lblMsg.Visible = true;
                 return false;
             }
             #endregion
 
             #region check duplication
-            else if ((lblTmpGwNo.Text != txt_GwNo.Text) && (csDatabase.ChkAllDuplicateGWNoGearUp(Convert.ToString(ddProcName.SelectedValue), Convert.ToString(txt_GwNo.Text), Convert.ToString(txt_Line.Text))))
+            else if ((lblTmpGwNo.Text != txt_GwNo.Text) && (csDatabase.ChkAllDuplicateGWNoGearUp(Convert.ToString(ddProcName.SelectedValue), Convert.ToString(txt_GwNo.Text), Convert.ToString(txt_Line.Text), Convert.ToString(txt_PhysAddr.Text))))
             {
-                lblMsg.Text = "Duplicate G/W No is not allowed in same Process. Please check.";
+                lblMsg.Text = "Duplicate G/W No and Lamp Physical Address are not allowed in same Process. Please check.";
                 lblMsg.Visible = true;
                 return false;
             }

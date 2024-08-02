@@ -414,6 +414,12 @@ public class GlobalFunc
         String sqlQuery = "SELECT sys_color as ReturnField FROM dps_ColorChart WHERE lighting = 'Lighting' AND color = '" + strColor + "' ORDER BY color";
         return ConnQuery.getReturnFieldExecuteReader(sqlQuery);
     }
+
+    public static DataSet getLineType()
+    {
+        String sqlQuery = "SELECT dd_descs as Description, dd_code as Code FROM dps_DropDownList WHERE dd_type = 'Line'";
+        return ConnQuery.getBindingDatasetData(sqlQuery);
+    }
     #endregion
 
     #region Log
