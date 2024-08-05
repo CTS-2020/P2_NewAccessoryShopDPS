@@ -48,13 +48,15 @@
                         <asp:Label ID="lblGroupName" runat="server" Text="Group Name"></asp:Label></td>
                     <td class="tdtextbox" style="width: 30%; height: 28px">
                         <asp:TextBox ID="txtGroupName" runat="server" CssClass="TextboxLongStyle"
-                            MaxLength="10"></asp:TextBox></td>
+                            MaxLength="16"></asp:TextBox></td>
                 </tr>
                 <tr>
                     <td class="tdfield" style="width: 20%; height: 28px">
                         <asp:Label ID="lblGroupLine" runat="server" Text="Group Line"></asp:Label></td>
                     <td class="tdtextbox" style="width: 30%; height: 28px">
-                        <asp:TextBox ID="txtGroupLine" runat="server" CssClass="TextboxLongStyle" MaxLength="1"></asp:TextBox></td>
+                        <asp:DropDownList ID="ddLineType" runat="server" AutoPostBack="true"></asp:DropDownList></td>
+                    <%--<td class="tdtextbox" style="width: 30%; height: 28px">
+                        <asp:TextBox ID="txtGroupLine" runat="server" CssClass="TextboxLongStyle" MaxLength="1"></asp:TextBox></td>--%>
                 </tr>
                 <tr>
                     <td colspan="4" class="alignRight">

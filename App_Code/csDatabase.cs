@@ -2376,46 +2376,46 @@ public class csDatabase
 
         if (strPlcNo != "")
         {
-            filterCriteria = filterCriteria + " AND plc_no = '" + strPlcNo + "'";
+            filterCriteria = filterCriteria + " AND blk.plc_no = '" + strPlcNo + "'";
         }
         if (strBlockSeq != "")
         {
-            filterCriteria = filterCriteria + " AND block_seq = '" + strBlockSeq + "'";
+            filterCriteria = filterCriteria + " AND blk.block_seq = '" + strBlockSeq + "'";
         }
         if (strBlockName != "")
         {
-            filterCriteria = filterCriteria + " AND block_name = '" + strBlockName + "'";
+            filterCriteria = filterCriteria + " AND blk.block_name = '" + strBlockName + "'";
         }
         if (strGwNo != "")
         {
-            filterCriteria = filterCriteria + " AND gw_no = '" + strGwNo + "'";
+            filterCriteria = filterCriteria + " AND blk.gw_no = '" + strGwNo + "'";
         }
         if (strStartLm != "")
         {
-            filterCriteria = filterCriteria + " AND start_lm = '" + strStartLm + "'";
+            filterCriteria = filterCriteria + " AND blk.start_lm = '" + strStartLm + "'";
         }
         if (strEndLm != "")
         {
-            filterCriteria = filterCriteria + " AND end_lm = '" + strEndLm + "'";
+            filterCriteria = filterCriteria + " AND blk.end_lm = '" + strEndLm + "'";
         }
         if (strProcName != "")
         {
-            filterCriteria = filterCriteria + " AND proc_name = '" + strProcName + "'";
+            filterCriteria = filterCriteria + " AND blk.proc_name = '" + strProcName + "'";
         }
         if (strGroupName != "")
         {
-            filterCriteria = filterCriteria + " AND group_name = '" + strGroupName + "'";
+            filterCriteria = filterCriteria + " AND blk.group_name = '" + strGroupName + "'";
         }
         if (strStartModuleType != "")
         {
-            filterCriteria = filterCriteria + " AND start_module_type = '" + strStartModuleType + "'";
+            filterCriteria = filterCriteria + " AND blk.start_module_type = '" + strStartModuleType + "'";
         }
         if (strEndModuleType != "")
         {
-            filterCriteria = filterCriteria + " AND end_module_type = '" + strEndModuleType + "'";
+            filterCriteria = filterCriteria + " AND blk.end_module_type = '" + strEndModuleType + "'";
         }
 
-        String sqlQuery = "SELECT * FROM dt_BlockMst WHERE block_name != '' " + filterCriteria + " ORDER BY gw_no";
+        String sqlQuery = "SELECT blk.*, grp.group_line FROM dt_BlockMst blk JOIN dt_GroupMst grp ON blk.group_name = grp.group_name WHERE blk.block_name != '' " + filterCriteria + " ORDER BY gw_no";
 
         try
         {

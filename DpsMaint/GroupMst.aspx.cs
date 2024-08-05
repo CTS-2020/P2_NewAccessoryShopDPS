@@ -37,6 +37,7 @@ public partial class GroupMst : System.Web.UI.Page
             try
             {
                 getProcName();
+                getLineType();
                 NewPageIndex = 0;
                 //SearchGroupMst();
             }
@@ -49,6 +50,24 @@ public partial class GroupMst : System.Web.UI.Page
     #endregion
 
     #region Method
+
+    #region getLineType
+    private void getLineType()
+    {
+        try
+        {
+            ddLineType.DataSource = GlobalFunc.getLineType();
+            ddLineType.DataTextField = "Description";
+            ddLineType.DataValueField = "Description";
+            ddLineType.DataBind();
+            ddLineType.Items.Insert(0, " ");
+        }
+        catch (Exception ex)
+        {
+            GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
+        }
+    }
+    #endregion
 
     #region getProcName
     private void getProcName()
@@ -80,7 +99,7 @@ public partial class GroupMst : System.Web.UI.Page
             String strGroupName = Convert.ToString(txtGroupName.Text).Trim();
             String strPlcNo = Convert.ToString(ddProcName.SelectedValue).Trim();
             String strProcName = Convert.ToString(ddProcName.SelectedItem).Trim();
-            String strGroupLine = Convert.ToString(txtGroupLine.Text).Trim();
+            String strGroupLine = Convert.ToString(ddLineType.SelectedValue).Trim();
 
             dsSearch = csDatabase.SrcGroupMst(strGroupID, strGroupName, strPlcNo, strProcName, strGroupLine);
             dtSearch = dsSearch.Tables[0];
@@ -120,7 +139,8 @@ public partial class GroupMst : System.Web.UI.Page
         {
             txtGroupId.Text = "";
             txtGroupName.Text = "";
-            txtGroupLine.Text = "";
+            //txtGroupLine.Text = "";
+            ddLineType.SelectedIndex = 0;
             ddProcName.SelectedIndex = 0;
             SearchGroupMst();
         }
@@ -144,7 +164,8 @@ public partial class GroupMst : System.Web.UI.Page
         if (Convert.ToString(txtGroupName.Text).Trim() != "") strGroupName = GlobalFunc.getReplaceToUrl(Convert.ToString(txtGroupName.Text));
         if (Convert.ToString(ddProcName.SelectedValue).Trim() != "") strPlcNo = GlobalFunc.getReplaceToUrl(Convert.ToString(ddProcName.SelectedValue));
         if (Convert.ToString(ddProcName.SelectedItem).Trim() != "") strProcName = GlobalFunc.getReplaceToUrl(Convert.ToString(ddProcName.SelectedItem));
-        if (Convert.ToString(txtGroupLine.Text).Trim() != "") strGroupLine = GlobalFunc.getReplaceToUrl(Convert.ToString(txtGroupLine.Text));
+        //if (Convert.ToString(txtGroupLine.Text).Trim() != "") strGroupLine = GlobalFunc.getReplaceToUrl(Convert.ToString(txtGroupLine.Text));
+        if (Convert.ToString(ddLineType.SelectedValue).Trim() != "") strGroupLine = GlobalFunc.getReplaceToUrl(Convert.ToString(ddLineType.SelectedValue));
 
         String strRedirect = "GroupMstReg.aspx?";
 

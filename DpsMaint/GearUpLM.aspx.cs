@@ -33,6 +33,7 @@ public partial class DpsMaint_GearUpLM : System.Web.UI.Page
             try
             {
                 getProcName();
+                getLineType();
                 NewPageIndex = 0;
                 //SearchGroupMst();
             }
@@ -40,6 +41,24 @@ public partial class DpsMaint_GearUpLM : System.Web.UI.Page
             {
                 GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
             }
+        }
+    }
+    #endregion
+
+    #region getLineType
+    private void getLineType()
+    {
+        try
+        {
+            ddLineType.DataSource = GlobalFunc.getLineType();
+            ddLineType.DataTextField = "Description";
+            ddLineType.DataValueField = "Description";
+            ddLineType.DataBind();
+            ddLineType.Items.Insert(0, " ");
+        }
+        catch (Exception ex)
+        {
+            GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
         }
     }
     #endregion
@@ -77,7 +96,7 @@ public partial class DpsMaint_GearUpLM : System.Web.UI.Page
         if (Convert.ToString(txtPartId.Text).Trim() != "") strPartID = GlobalFunc.getReplaceToUrl(Convert.ToString(txtPartId.Text));
         if (Convert.ToString(ddProcName.SelectedValue).Trim() != "") strPlcNo = GlobalFunc.getReplaceToUrl(Convert.ToString(ddProcName.SelectedValue));
         if (Convert.ToString(ddProcName.SelectedItem).Trim() != "") strProcName = GlobalFunc.getReplaceToUrl(Convert.ToString(ddProcName.SelectedItem));
-        if (Convert.ToString(txt_Line.Text).Trim() != "") strLine = GlobalFunc.getReplaceToUrl(Convert.ToString(txt_Line.Text));
+        if (Convert.ToString(ddLineType.SelectedValue).Trim() != "") strLine = GlobalFunc.getReplaceToUrl(Convert.ToString(ddLineType.SelectedValue));
         if (Convert.ToString(txt_ModuleAddr.Text).Trim() != "") strModAddr = GlobalFunc.getReplaceToUrl(Convert.ToString(txt_ModuleAddr.Text));
         if (Convert.ToString(txt_PhysAddr.Text).Trim() != "") strPhysAddr = GlobalFunc.getReplaceToUrl(Convert.ToString(txt_PhysAddr.Text));
         if (Convert.ToString(txt_GwNo.Text).Trim() != "") strGwNo = GlobalFunc.getReplaceToUrl(Convert.ToString(txt_GwNo.Text));
@@ -108,7 +127,8 @@ public partial class DpsMaint_GearUpLM : System.Web.UI.Page
             txt_ModuleAddr.Text = "";
             txt_PhysAddr.Text = "";
             txt_GearUpID.Text = "";
-            txt_Line.Text = "";
+            //txt_Line.Text = "";
+            ddLineType.SelectedIndex = 0;
             txtPartId.Text = "";
             ddProcName.SelectedIndex = 0;
             SearchGearUpLm();
@@ -134,7 +154,7 @@ public partial class DpsMaint_GearUpLM : System.Web.UI.Page
             String strPlcNo = Convert.ToString(ddProcName.SelectedValue).Trim();
             String strProcName = Convert.ToString(ddProcName.SelectedItem).Trim();
             String strPartID = Convert.ToString(txtPartId.Text).Trim();
-            String strLine = Convert.ToString(txt_Line.Text).Trim();
+            String strLine = Convert.ToString(ddLineType.SelectedValue).Trim();
             String strGwNo = Convert.ToString(txt_GwNo.Text).Trim();
             String strModAddr = Convert.ToString(txt_ModuleAddr.Text).Trim();
             String strPhysAddr = Convert.ToString(txt_PhysAddr.Text).Trim();

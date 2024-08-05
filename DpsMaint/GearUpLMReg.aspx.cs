@@ -35,6 +35,7 @@ public partial class DpsMaint_GearUpLMReg : System.Web.UI.Page
             try
             {
                 getProcName();
+                getLineType();
 
                 if (tempPartId != "")
                 {
@@ -83,11 +84,11 @@ public partial class DpsMaint_GearUpLMReg : System.Web.UI.Page
     {
         try
         {
-            //ddLineType.DataSource = GlobalFunc.getLineType();
-            //ddLineType.DataTextField = "Description";
-            //ddLineType.DataValueField = "Description";
-            //ddLineType.DataBind();
-            //ddLineType.Items.Insert(0, " ");
+            ddLineType.DataSource = GlobalFunc.getLineType();
+            ddLineType.DataTextField = "Description";
+            ddLineType.DataValueField = "Description";
+            ddLineType.DataBind();
+            ddLineType.Items.Insert(0, " ");
         }
         catch (Exception ex)
         {
@@ -137,7 +138,8 @@ public partial class DpsMaint_GearUpLMReg : System.Web.UI.Page
                 }
                 if (Convert.ToString(dt.Rows[0]["Line"]).Trim() != "")
                 {
-                    txt_Line.Text = Convert.ToString(dt.Rows[0]["Line"]).Trim();
+                    ddLineType.SelectedValue = Convert.ToString(dt.Rows[0]["Line"]);
+                    //txt_Line.Text = Convert.ToString(dt.Rows[0]["Line"]).Trim();
                     lblTmpLine.Text = Convert.ToString(dt.Rows[0]["Line"]).Trim();
                 }
                 if (Convert.ToString(dt.Rows[0]["LmModuleAddress"]).Trim() != "")
@@ -247,15 +249,27 @@ public partial class DpsMaint_GearUpLMReg : System.Web.UI.Page
                 lblMsg.Visible = true;
                 return false;
             }
-            else if (Convert.ToString(txt_Line.Text) == "")
+            //else if (Convert.ToString(txt_Line.Text) == "")
+            //{
+            //    lblMsg.Text = "Please enter Line.";
+            //    lblMsg.Visible = true;
+            //    return false;
+            //}
+            //else if ((Convert.ToString(txt_Line.Text) != "") && ((Convert.ToString(txt_Line.Text) != "A") && (Convert.ToString(txt_Line.Text) != "B")))
+            //{
+            //    lblMsg.Text = "Please enter Line (A or B).";
+            //    lblMsg.Visible = true;
+            //    return false;
+            //}
+            else if (Convert.ToString(ddLineType.SelectedValue) == "")
             {
                 lblMsg.Text = "Please enter Line.";
                 lblMsg.Visible = true;
                 return false;
             }
-            else if ((Convert.ToString(txt_Line.Text) != "") && ((Convert.ToString(txt_Line.Text) != "A") && (Convert.ToString(txt_Line.Text) != "B")))
+            else if ((Convert.ToString(ddLineType.SelectedValue) != "") && ((Convert.ToString(ddLineType.SelectedValue) != "A") && (Convert.ToString(ddLineType.SelectedValue) != "B")))
             {
-                lblMsg.Text = "Please enter Line (A or B).";
+                lblMsg.Text = "Please enter Line.";
                 lblMsg.Visible = true;
                 return false;
             }
@@ -324,7 +338,13 @@ public partial class DpsMaint_GearUpLMReg : System.Web.UI.Page
             #endregion
 
             #region check duplication
-            else if ((lblTmpGwNo.Text != txt_GwNo.Text) && (csDatabase.ChkAllDuplicateGWNoGearUp(Convert.ToString(ddProcName.SelectedValue), Convert.ToString(txt_GwNo.Text), Convert.ToString(txt_Line.Text), Convert.ToString(txt_PhysAddr.Text))))
+            //else if ((lblTmpGwNo.Text != txt_GwNo.Text) && (csDatabase.ChkAllDuplicateGWNoGearUp(Convert.ToString(ddProcName.SelectedValue), Convert.ToString(txt_GwNo.Text), Convert.ToString(txt_Line.Text), Convert.ToString(txt_PhysAddr.Text))))
+            //{
+            //    lblMsg.Text = "Duplicate G/W No and Lamp Physical Address are not allowed in same Process. Please check.";
+            //    lblMsg.Visible = true;
+            //    return false;
+            //}
+            else if ((lblTmpGwNo.Text != txt_GwNo.Text) && (csDatabase.ChkAllDuplicateGWNoGearUp(Convert.ToString(ddProcName.SelectedValue), Convert.ToString(txt_GwNo.Text), Convert.ToString(ddLineType.SelectedValue), Convert.ToString(txt_PhysAddr.Text))))
             {
                 lblMsg.Text = "Duplicate G/W No and Lamp Physical Address are not allowed in same Process. Please check.";
                 lblMsg.Visible = true;
@@ -363,7 +383,8 @@ public partial class DpsMaint_GearUpLMReg : System.Web.UI.Page
             txt_GwNo.Text = "";
             txt_ModuleAddr.Text = "";
             txt_PhysAddr.Text = "";
-            txt_Line.Text = "";
+            //txt_Line.Text = "";
+            ddLineType.SelectedIndex = 0;
             txt_GearUpID.Text = "";
             txtPartId.Text = "";
             ddProcName.SelectedIndex = 0;
@@ -391,7 +412,8 @@ public partial class DpsMaint_GearUpLMReg : System.Web.UI.Page
                 String strPlcNo = Convert.ToString(ddProcName.SelectedValue);
                 String strProcName = Convert.ToString(ddProcName.SelectedItem);
                 String strGearID = Convert.ToString(txt_GearUpID.Text);
-                String strLine = Convert.ToString(txt_Line.Text);
+                //String strLine = Convert.ToString(txt_Line.Text);
+                String strLine = Convert.ToString(ddLineType.SelectedValue);
                 String strGwNo = Convert.ToString(txt_GwNo.Text);
                 String strModAddr = Convert.ToString(txt_ModuleAddr.Text);
                 String strPhysAddr = Convert.ToString(txt_PhysAddr.Text);
@@ -462,7 +484,8 @@ public partial class DpsMaint_GearUpLMReg : System.Web.UI.Page
                 String strPlcNo = Convert.ToString(ddProcName.SelectedValue);
                 String strProcName = Convert.ToString(ddProcName.SelectedItem);
                 String strGearID = Convert.ToString(txt_GearUpID.Text);
-                String strLine = Convert.ToString(txt_Line.Text);
+                //String strLine = Convert.ToString(txt_Line.Text);
+                String strLine = Convert.ToString(ddLineType.SelectedValue);
                 String strGwNo = Convert.ToString(txt_GwNo.Text);
                 String strModAddr = Convert.ToString(txt_ModuleAddr.Text);
                 String strPhysAddr = Convert.ToString(txt_PhysAddr.Text);
@@ -528,6 +551,20 @@ public partial class DpsMaint_GearUpLMReg : System.Web.UI.Page
         {
             NewPageIndex = e.NewPageIndex;
             showRefGrid();
+        }
+        catch (Exception ex)
+        {
+            GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
+        }
+    }
+    #endregion
+
+    #region ddLineType_OnSelectedIndexChanged
+    protected void ddLineType_OnSelectedIndexChanged(object sender, EventArgs e)
+    {
+        try
+        {
+
         }
         catch (Exception ex)
         {

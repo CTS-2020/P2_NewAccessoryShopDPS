@@ -54,7 +54,9 @@
                     <td class="tdfield" style="width: 20%; height: 28px">
                         <asp:Label ID="lblLine" runat="server" Text="Line"></asp:Label></td>
                     <td class="tdtextbox" style="width: 30%; height: 28px">
-                        <asp:TextBox ID="txt_Line" runat="server" CssClass="TextboxLongStyle" MaxLength="1"></asp:TextBox></td>
+                        <asp:DropDownList ID="ddLineType" runat="server" AutoPostBack="true"></asp:DropDownList></td>
+                    <%--<td class="tdtextbox" style="width: 30%; height: 28px">
+                        <asp:TextBox ID="txt_Line" runat="server" CssClass="TextboxLongStyle" MaxLength="1"></asp:TextBox></td>--%>
                     <td class="tdfield" style="width: 20%; height: 28px">
                         <asp:Label ID="lblGwNo" runat="server" Text="G/W No"></asp:Label></td>
                     <td class="tdtextbox" style="width: 30%; height: 28px">

@@ -163,6 +163,7 @@
                                 <asp:BoundField ItemStyle-Wrap="false" HeaderText="PLC No" DataField="plc_no"/>
                                 <asp:BoundField ItemStyle-Wrap="false" HeaderText="Process Name" DataField="proc_name"/>
                                 <asp:BoundField ItemStyle-Wrap="false" HeaderText="Group Name" DataField="group_name"/>
+                                <asp:BoundField ItemStyle-Wrap="false" HeaderText="Group Line" DataField="group_line"/>
                                 <asp:BoundField ItemStyle-Wrap="false" HeaderText="Block Seq" DataField="block_seq"/>
                                 <asp:BoundField ItemStyle-Wrap="false" HeaderText="Block Name" DataField="block_name"/>
                                 <asp:BoundField ItemStyle-Wrap="false" HeaderText="G/W No" DataField="gw_no"/>

@@ -40,6 +40,7 @@ public partial class GroupMst : System.Web.UI.Page
             try
             {
                 getProcName();
+                getLineType();
 
                 if (tempGroupId != "")
                 {
@@ -91,6 +92,24 @@ public partial class GroupMst : System.Web.UI.Page
     }
     #endregion
 
+    #region getLineType
+    private void getLineType()
+    {
+        try
+        {
+            ddLineType.DataSource = GlobalFunc.getLineType();
+            ddLineType.DataTextField = "Description";
+            ddLineType.DataValueField = "Description";
+            ddLineType.DataBind();
+            ddLineType.Items.Insert(0, " ");
+        }
+        catch (Exception ex)
+        {
+            GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
+        }
+    }
+    #endregion
+
     #region BindtoText
     public void BindtoText(DataTable dt)
     {
@@ -110,7 +129,8 @@ public partial class GroupMst : System.Web.UI.Page
                 }
                 if (Convert.ToString(dt.Rows[0]["group_line"]).Trim() != "")
                 {
-                    txtGroupLine.Text = Convert.ToString(dt.Rows[0]["group_line"]).Trim();
+                    //txtGroupLine.Text = Convert.ToString(dt.Rows[0]["group_line"]).Trim();
+                    ddLineType.SelectedValue = Convert.ToString(dt.Rows[0]["group_line"]);
                     //lblGroupLine.Text = Convert.ToString(dt.Rows[0]["group_line"]).Trim();
                 }
                 if (Convert.ToString(dt.Rows[0]["plc_no"]).Trim() != "")
@@ -137,7 +157,8 @@ public partial class GroupMst : System.Web.UI.Page
             }
             txtGroupId.Text = "";
             txtGroupName.Text = "";
-            txtGroupLine.Text = "";
+            //txtGroupLine.Text = "";
+            ddLineType.SelectedIndex = 0;
         }
         catch (Exception ex)
         {
@@ -169,19 +190,37 @@ public partial class GroupMst : System.Web.UI.Page
                 lblMsg.Visible = true;
                 return false;
             }
-            else if (Convert.ToString(txtGroupLine.Text) == "")
+            //else if (Convert.ToString(txtGroupLine.Text) == "")
+            //{
+            //    lblMsg.Text = "Please enter Group Line.";
+            //    lblMsg.Visible = true;
+            //    return false;
+            //}
+            else if (Convert.ToString(ddLineType.SelectedValue) == "")
             {
                 lblMsg.Text = "Please enter Group Line.";
                 lblMsg.Visible = true;
                 return false;
             }
-            else if (csDatabase.ChkDuplicateGroupName(Convert.ToString(txtGroupName.Text), Convert.ToString(lblTmpGroupName.Text), Convert.ToString(ddProcName.SelectedItem), Convert.ToString(txtGroupLine.Text)))
+            //else if (csDatabase.ChkDuplicateGroupName(Convert.ToString(txtGroupName.Text), Convert.ToString(lblTmpGroupName.Text), Convert.ToString(ddProcName.SelectedItem), Convert.ToString(txtGroupLine.Text)))
+            //{
+            //    lblMsg.Text = "Duplicate Group Name is not allowed in same Process. Please check.";
+            //    lblMsg.Visible = true;
+            //    return false;
+            //}
+            //else if (csDatabase.ChkDuplicateGroupID(Convert.ToString(txtGroupId.Text), Convert.ToString(lblTmpGroupId.Text), Convert.ToString(ddProcName.SelectedItem), Convert.ToString(txtGroupLine.Text)))
+            //{
+            //    lblMsg.Text = "Duplicate Group ID is not allowed in same Process. Please check.";
+            //    lblMsg.Visible = true;
+            //    return false;
+            //}
+            else if (csDatabase.ChkDuplicateGroupName(Convert.ToString(txtGroupName.Text), Convert.ToString(lblTmpGroupName.Text), Convert.ToString(ddProcName.SelectedItem), Convert.ToString(ddLineType.SelectedValue)))
             {
                 lblMsg.Text = "Duplicate Group Name is not allowed in same Process. Please check.";
                 lblMsg.Visible = true;
                 return false;
             }
-            else if (csDatabase.ChkDuplicateGroupID(Convert.ToString(txtGroupId.Text), Convert.ToString(lblTmpGroupId.Text), Convert.ToString(ddProcName.SelectedItem), Convert.ToString(txtGroupLine.Text)))
+            else if (csDatabase.ChkDuplicateGroupID(Convert.ToString(txtGroupId.Text), Convert.ToString(lblTmpGroupId.Text), Convert.ToString(ddProcName.SelectedItem), Convert.ToString(ddLineType.SelectedValue)))
             {
                 lblMsg.Text = "Duplicate Group ID is not allowed in same Process. Please check.";
                 lblMsg.Visible = true;
@@ -253,7 +292,8 @@ public partial class GroupMst : System.Web.UI.Page
                 String strPlcNo = Convert.ToString(ddProcName.SelectedValue);
                 String strProcName = Convert.ToString(ddProcName.SelectedItem);
                 String strCurUser = Convert.ToString(Session["SessUserId"]);
-                String strGroupLine = Convert.ToString(txtGroupLine.Text);
+                //String strGroupLine = Convert.ToString(txtGroupLine.Text);
+                String strGroupLine = Convert.ToString(ddLineType.SelectedValue);
 
                 if (csDatabase.ChkGroupMaxCnt(strProcName))
                 {
@@ -315,7 +355,8 @@ public partial class GroupMst : System.Web.UI.Page
                 String tempGroupID = Convert.ToString(lblTmpGroupId.Text);
                 String tempGroupName = Convert.ToString(lblTmpGroupName.Text);
                 String strCurUser = Convert.ToString(Session["SessUserId"]);
-                String strGroupLine = Convert.ToString(txtGroupLine.Text);
+                //String strGroupLine = Convert.ToString(txtGroupLine.Text);
+                String strGroupLine = Convert.ToString(ddLineType.SelectedValue);
 
                 string confirmValue = Request.Form["confirm_value"];
                 if (confirmValue == "Yes")
