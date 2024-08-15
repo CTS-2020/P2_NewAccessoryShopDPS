@@ -25,6 +25,9 @@ using Itenso.Rtf.Parser;
 using Itenso.Rtf.Support;
 using Excel = Microsoft.Office.Interop.Excel;
 using Marshal = System.Runtime.InteropServices.Marshal;
+using OfficeOpenXml;
+using Microsoft.Office.Interop.Excel;
+using OfficeOpenXml.Style;
 
 
 public partial class PlcConvResult : System.Web.UI.Page
@@ -35,7 +38,7 @@ public partial class PlcConvResult : System.Web.UI.Page
     private Excel.Range xlWorkSheet_range = null;
     private object misValue = System.Reflection.Missing.Value;
 
-    
+
 
     #region PageLoad
     protected void Page_Load(object sender, EventArgs e)
@@ -113,7 +116,7 @@ public partial class PlcConvResult : System.Web.UI.Page
     #region Get Rack Master
     protected void getRackMst(out String strRackMstRow, out String strRackMstCol)
     {
-        
+
         String strProcName = Convert.ToString(txtProcName.Text);
         String strPlcNo = Convert.ToString(lblPlcNo.Text);
         String strGroupName = Convert.ToString(txtGroupName.Text);
@@ -124,7 +127,7 @@ public partial class PlcConvResult : System.Web.UI.Page
         strRackMstCol = "";
 
         DataSet dsRackMst = new DataSet();
-        DataTable dtRackMst = new DataTable();
+        System.Data.DataTable dtRackMst = new System.Data.DataTable();
 
         dsRackMst = csDatabase.SrcRackMst(strRackName, strPlcNo, strProcName, strGroupName, strBlockName);
         dtRackMst = dsRackMst.Tables[0];
@@ -153,28 +156,9 @@ public partial class PlcConvResult : System.Web.UI.Page
     {
         try
         {
-            Excel.Application xlApp = new Microsoft.Office.Interop.Excel.Application();
-
-            if (xlApp == null)
-            {
-                GlobalFunc.ShowErrorMessage("Excel is not properly installed!!");
-                return;
-            }
-            System.Globalization.CultureInfo newCulture;
-            System.Globalization.CultureInfo OldCulture;
-            OldCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
-            newCulture = new System.Globalization.CultureInfo("en-US");
+            System.Globalization.CultureInfo newCulture = new System.Globalization.CultureInfo("en-US");
+            System.Globalization.CultureInfo oldCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
             System.Threading.Thread.CurrentThread.CurrentCulture = newCulture;
-
-            //Response.Write("OldCulture = " + OldCulture.ToString());
-            //Response.Write("newCulture = " + newCulture.ToString());
-            //Response.End();
-
-            xlApp.DisplayAlerts = false;
-            xlWorkBook = xlApp.Workbooks.Open(Server.MapPath("~/template/template.xls"), misValue, misValue, misValue, misValue, misValue, false, Excel.XlPlatform.xlWindows, misValue, misValue, misValue, misValue, misValue, misValue, misValue);
-            xlWorkBook.DoNotPromptForConvert = true;
-            xlWorkBook.CheckCompatibility = false;
-            xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
 
             String strProcName = txtProcName.Text;
             String strGroupName = txtGroupName.Text;
@@ -186,180 +170,217 @@ public partial class PlcConvResult : System.Web.UI.Page
             String strSfx = txtSfx.Text;
             String strColor = txtColor.Text;
 
-            String strFileName = strProcName + "-" + strRackName + "-" + strInsCode + "-" + strSfx + "-" + strColor;
-            String strFilePath = Server.MapPath("~/template/" + strFileName + ".xls");
+            string templatePath = Server.MapPath("~/template/template.xlsx");
+            string strFileName = strProcName + "-" + strRackName + "-" + strInsCode + "-" + strSfx + "-" + strColor;
+            string strFilePath = Server.MapPath("~/template/" + strFileName + ".xlsx");
 
-            if (File.Exists(strFilePath))
+            FileInfo templateFile = new FileInfo(templatePath);
+            FileInfo newFile = new FileInfo(strFilePath);
+
+            // Delete the file if it exists
+            if (newFile.Exists)
             {
-                File.Delete(strFilePath);
+                newFile.Delete();
+            }
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            if (!templateFile.Exists)
+            {
+                throw new FileNotFoundException("Template file not found at: " + templatePath);
             }
 
-            xlWorkSheet.Cells[2, 2] = "Process : " + strProcName;
-            xlWorkSheet.Cells[2, 5] = "Group : " + strGroupName;
-            xlWorkSheet.Cells[2, 8] = "Block : " + strBlockName;
-            xlWorkSheet.Cells[2, 11] = "Rack : " + strRackName;
-            xlWorkSheet.Cells[4, 2] = "Instruction Code : " + strInsCode;
-            xlWorkSheet.Cells[4, 5] = "Model : " + strModel;
-            xlWorkSheet.Cells[4, 8] = "Sfx : " + strSfx;
-            xlWorkSheet.Cells[4, 11] = "Color : " + strColor;
-            xlWorkSheet.Cells[4, 14] = "Katashiki : " + strKatashiki;
-            
-            int rowCnt = 0;
-            int colCnt = 0;
-            int rowCtr = 0;
-            int colCtr = 0;
-
-            int xVal = 0;
-            int yVal = 0;
-
-            rowCnt = int.Parse(strRackMstRow);
-            colCnt = int.Parse(strRackMstCol);
-
-            for (rowCtr = 1; rowCtr <= rowCnt; rowCtr++)
+            if (templateFile.Extension.ToLower() != ".xlsx")
             {
-                if (rowCtr == 1)
+                throw new Exception("The template file is not a valid .xlsx file.");
+            }
+
+            using (var templatePackage = new ExcelPackage(templateFile))
+            {
+                if (templatePackage.Workbook.Worksheets.Count == 0)
                 {
-                    xVal = rowCtr + 5;
+                    throw new Exception("The template file does not contain any worksheets.");
                 }
-                else
+
+                ExcelWorksheet templateWorksheet = templatePackage.Workbook.Worksheets[0];
+
+                using (var package = new ExcelPackage())
                 {
-                    xVal = xVal + 6;
-                }
+                    var newWorksheet = package.Workbook.Worksheets.Add("Sheet1", templateWorksheet);
 
-                for (colCtr = 1; colCtr <= colCnt; colCtr++)
-                {
-                    String strAisDet = "";
-                    String strModDet = "";
-                    String strRackDetId = strRackName + "^" + rowCtr + "^" + colCtr;
+                    newWorksheet.Cells[2, 2].Value = "Process : " + strProcName;
+                    newWorksheet.Cells[2, 5].Value = "Group : " + strGroupName;
+                    newWorksheet.Cells[2, 8].Value = "Block : " + strBlockName;
+                    newWorksheet.Cells[2, 11].Value = "Rack : " + strRackName;
+                    newWorksheet.Cells[4, 2].Value = "Instruction Code : " + strInsCode;
+                    newWorksheet.Cells[4, 5].Value = "Model : " + strModel;
+                    newWorksheet.Cells[4, 8].Value = "Sfx : " + strSfx;
+                    newWorksheet.Cells[4, 11].Value = "Color : " + strColor;
+                    newWorksheet.Cells[4, 14].Value = "Katashiki : " + strKatashiki;
 
-                    String strPartName = "";
-                    String strPartNumber = "";
-                    String strSymbol = "";
-                    String strSymbolFontColor = "";
-                    String strSymbolBgColor = "";
-                    String strModuleAdd = "";
-                    String strRackLmColor = "";
+                    int rowCnt = 0;
+                    int colCnt = 0;
+                    int rowCtr = 0;
+                    int colCtr = 0;
 
-                    if (colCtr == 1)
+                    int xVal = 0;
+                    int yVal = 0;
+
+                    rowCnt = int.Parse(strRackMstRow);
+                    colCnt = int.Parse(strRackMstCol);
+
+                    for (rowCtr = 1; rowCtr <= rowCnt; rowCtr++)
                     {
-                        yVal = colCtr;
-                    }
-                    else
-                    {
-                        yVal = yVal + 3;
-                    }
-
-                    #region Get and Assign Ais Detail
-                    strAisDet = getAisDetString(strRackDetId);
-
-                    #region Sample Data Retrieve
-                    // 0 strHjId
-                    // 1 strHjItemId
-                    // 2 strHjRow
-                    // 3 strHjCol
-                    // 4 strPartsTitle
-                    // 5 strPartsNo
-                    // 6 strColorSfx
-                    // 7 strSymbolCode
-                    // 8 strSymbolRtf;
-                    #endregion
-                    String[] tmpAisVal = strAisDet.Split('~');
-                    int tmpAisValCnt = tmpAisVal.Length;
-                    if (tmpAisValCnt != 1)
-                    {
-                        strSymbol = Itenso.Solutions.Community.Rtf2Html.RtfConverterDemo.ConvertRtf2Txt(tmpAisVal[8]);
-                        strSymbol = strSymbol.Replace("\r", "");
-                        strSymbol = strSymbol.Replace("\n", "");
-
-                        strPartName = tmpAisVal[4];
-                        strPartNumber = tmpAisVal[5] + " - " + tmpAisVal[6];
-
-                        strSymbolFontColor = csDatabase.GetPartsFontColor(tmpAisVal[5], tmpAisVal[6]);
-                        strSymbolBgColor = csDatabase.GetPartsBgColor(tmpAisVal[5], tmpAisVal[6]);
-                    }
-                    #endregion
-
-                    #region Get and Assign Module Address Detail
-                    strModDet = getModDetString(strRackDetId);
-
-                    #region Sample Data Retrieve
-                    // 0 strModuleAdd
-                    // 1 strModuleName
-                    // 2 strLightColorDuringInstruction
-                    #endregion
-                    String[] tmpModVal = strModDet.Split('~');
-                    int tmpModValCnt = tmpModVal.Length;
-                    if (tmpModValCnt != 1)
-                    {
-                        strModuleAdd = "Module Address : " + tmpModVal[0];
-                    }
-
-                    #region Rack Light Simulation
-                    if (tmpAisValCnt != 1)
-                    {
-                        if (tmpModValCnt != 1)
+                        if (rowCtr == 1)
                         {
-                            if (RackLightSimulation(tmpAisVal[5], tmpAisVal[6]) == true)
+                            xVal = rowCtr + 5;
+                        }
+                        else
+                        {
+                            xVal = xVal + 6;
+                        }
+
+                        for (colCtr = 1; colCtr <= colCnt; colCtr++)
+                        {
+                            String strAisDet = "";
+                            String strModDet = "";
+                            String strRackDetId = strRackName + "^" + rowCtr + "^" + colCtr;
+
+                            String strPartName = "";
+                            String strPartNumber = "";
+                            String strSymbol = "";
+                            String strSymbolFontColor = "";
+                            String strSymbolBgColor = "";
+                            String strModuleAdd = "";
+                            String strRackLmColor = "";
+
+                            if (colCtr == 1)
                             {
-                                strRackLmColor = GlobalFunc.getColorCode(tmpModVal[2]);
+                                yVal = colCtr;
+                            }
+                            else
+                            {
+                                yVal = yVal + 3;
+                            }
+
+                            #region Get and Assign Ais Detail
+                            strAisDet = getAisDetString(strRackDetId);
+
+                            #region Sample Data Retrieve
+                            // 0 strHjId
+                            // 1 strHjItemId
+                            // 2 strHjRow
+                            // 3 strHjCol
+                            // 4 strPartsTitle
+                            // 5 strPartsNo
+                            // 6 strColorSfx
+                            // 7 strSymbolCode
+                            // 8 strSymbolRtf;
+                            #endregion
+                            String[] tmpAisVal = strAisDet.Split('~');
+                            int tmpAisValCnt = tmpAisVal.Length;
+                            if (tmpAisValCnt != 1)
+                            {
+                                strSymbol = Itenso.Solutions.Community.Rtf2Html.RtfConverterDemo.ConvertRtf2Txt(tmpAisVal[8]);
+                                strSymbol = strSymbol.Replace("\r", "");
+                                strSymbol = strSymbol.Replace("\n", "");
+
+                                strPartName = tmpAisVal[4];
+                                strPartNumber = tmpAisVal[5] + " - " + tmpAisVal[6];
+
+                                strSymbolFontColor = csDatabase.GetPartsFontColor(tmpAisVal[5], tmpAisVal[6]);
+                                strSymbolBgColor = csDatabase.GetPartsBgColor(tmpAisVal[5], tmpAisVal[6]);
+                            }
+                            #endregion
+
+                            #region Get and Assign Module Address Detail
+                            strModDet = getModDetString(strRackDetId);
+
+                            #region Sample Data Retrieve
+                            // 0 strModuleAdd
+                            // 1 strModuleName
+                            // 2 strLightColorDuringInstruction
+                            #endregion
+                            String[] tmpModVal = strModDet.Split('~');
+                            int tmpModValCnt = tmpModVal.Length;
+                            if (tmpModValCnt != 1)
+                            {
+                                strModuleAdd = "Module Address : " + tmpModVal[0];
+                            }
+
+                            #region Rack Light Simulation
+                            if (tmpAisValCnt != 1)
+                            {
+                                if (tmpModValCnt != 1)
+                                {
+                                    if (RackLightSimulation(tmpAisVal[5], tmpAisVal[6]) == true)
+                                    {
+                                        strRackLmColor = GlobalFunc.getColorCode(tmpModVal[2]);
+                                    }
+                                }
+                            }
+                            #endregion
+                            #endregion
+
+                            newWorksheet.Cells[xVal, yVal].Value = "[" + rowCtr + "-" + colCtr + "]  " + strPartName;
+                            newWorksheet.Cells[xVal + 1, yVal].Value = strPartNumber;
+                            newWorksheet.Cells[xVal + 2, yVal].Value = "";
+                            newWorksheet.Cells[xVal + 4, yVal].Value = "";
+                            newWorksheet.Cells[xVal + 5, yVal].Value = strModuleAdd;
+
+                            String strRackLmCell_1 = GetCellAdd(newWorksheet, xVal, yVal);
+                            String strRackLmCell_2 = GetCellAdd(newWorksheet, xVal + 5, yVal + 2);
+                            // Get the range using the addresses
+                            var xlWorkSheet_range = newWorksheet.Cells[strRackLmCell_1 + ":" + strRackLmCell_2];
+
+                            // Apply the background color to the range
+                            // Assuming GetCellColor returns a System.Drawing.Color object
+                            xlWorkSheet_range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                            xlWorkSheet_range.Style.Fill.BackgroundColor.SetColor(GetCellColor(strRackLmColor));
+
+                            newWorksheet.Cells[xVal + 3, yVal + 1].Value = strSymbol;
+
+                            String strSymbolCell_1 = GetCellAdd(newWorksheet, xVal + 3, yVal + 1);
+                            //xlWorkSheet_range = null;
+                            //xlWorkSheet_range = xlWorkSheet.get_Range(strSymbolCell_1, strSymbolCell_1);
+                            //xlWorkSheet_range.Font.Size = "22";
+                            //xlWorkSheet_range.Font.Color = GetCellColor(xlWorkSheet_range, strSymbolFontColor);
+                            //xlWorkSheet_range.Interior.Color = GetCellColor(xlWorkSheet_range, strSymbolBgColor);
+                            // Directly reference the cell using EPPlus
+                            xlWorkSheet_range = null;
+                            xlWorkSheet_range = newWorksheet.Cells[strSymbolCell_1];
+
+                            // Set font size
+                            xlWorkSheet_range.Style.Font.Size = 22;
+
+                            // Set font color
+                            xlWorkSheet_range.Style.Font.Color.SetColor(System.Drawing.ColorTranslator.FromHtml(strSymbolFontColor));
+
+                            // Set background color
+                            xlWorkSheet_range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                            xlWorkSheet_range.Style.Fill.BackgroundColor.SetColor(System.Drawing.ColorTranslator.FromHtml(strSymbolBgColor));
+
+                            if (colCtr % 6 == 0)
+                            {
+                                yVal = yVal + 1;
                             }
                         }
+                        if (rowCtr % 7 == 0)
+                        {
+                            xVal = xVal + 11;
+                        }
                     }
-                    #endregion
-                    #endregion
-
-                    xlWorkSheet.Cells[xVal, yVal] = "[" + rowCtr + "-" + colCtr + "]  " + strPartName;
-                    xlWorkSheet.Cells[xVal + 1, yVal] = strPartNumber;
-                    xlWorkSheet.Cells[xVal + 2, yVal] = "";
-                    xlWorkSheet.Cells[xVal + 4, yVal] = "";
-                    xlWorkSheet.Cells[xVal + 5, yVal] = strModuleAdd;
-
-                    String strRackLmCell_1 = GetCellAdd(xlWorkSheet, xVal, yVal);
-                    String strRackLmCell_2 = GetCellAdd(xlWorkSheet, xVal + 5, yVal + 2);
-                    xlWorkSheet_range = null;
-                    xlWorkSheet_range = xlWorkSheet.get_Range(strRackLmCell_1, strRackLmCell_2);
-                    xlWorkSheet_range.Interior.Color = GetCellColor(xlWorkSheet_range, strRackLmColor);
-
-                    xlWorkSheet.Cells[xVal + 3, yVal + 1] = strSymbol;
-
-                    String strSymbolCell_1 = GetCellAdd(xlWorkSheet, xVal + 3, yVal + 1);
-                    xlWorkSheet_range = null;
-                    xlWorkSheet_range = xlWorkSheet.get_Range(strSymbolCell_1, strSymbolCell_1);
-                    xlWorkSheet_range.Font.Size = "22";
-                    xlWorkSheet_range.Font.Color = GetCellColor(xlWorkSheet_range, strSymbolFontColor);
-                    xlWorkSheet_range.Interior.Color = GetCellColor(xlWorkSheet_range, strSymbolBgColor);
-
-                    if (colCtr % 6 == 0)
-                    {
-                        yVal = yVal + 1;
-                    }
-                }
-                if (rowCtr % 7 == 0)
-                {
-                    xVal = xVal + 11;
+                    package.SaveAs(newFile);
                 }
             }
 
-            xlWorkBook.SaveAs(strFilePath, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
-            xlWorkBook.Close(true, misValue, misValue);
-            xlApp.Quit();
-
-            releaseObject(xlWorkSheet);
-            releaseObject(xlWorkBook);
-            releaseObject(xlApp);
-
+            System.Threading.Thread.CurrentThread.CurrentCulture = oldCulture;
+            // Show the generated Excel file
             ShowExcel(strFilePath, strFileName);
-
-            System.Threading.Thread.CurrentThread.CurrentCulture = OldCulture;
         }
         catch (Exception ex)
         {
             GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
-            xlWorkBook.Close(true, misValue, misValue);
-            xlApp.Quit();
-            releaseObject(xlWorkSheet);
-            releaseObject(xlWorkBook);
-            releaseObject(xlApp);
+
         }
 
 
@@ -372,7 +393,7 @@ public partial class PlcConvResult : System.Web.UI.Page
         String strRackName = Convert.ToString(txtRackName.Text);
         String strAisRackDetAis = "";
         DataSet dsRackDetAis = new DataSet();
-        DataTable dtRackDetAis = new DataTable();
+        System.Data.DataTable dtRackDetAis = new System.Data.DataTable();
 
         dsRackDetAis = csDatabase.GetRackMstDetAis(strRackDetId);
         dtRackDetAis = dsRackDetAis.Tables[0];
@@ -454,7 +475,7 @@ public partial class PlcConvResult : System.Web.UI.Page
         String strRackName = Convert.ToString(txtRackName.Text);
         String strAisRackDetModule = "";
         DataSet dsRackDetModule = new DataSet();
-        DataTable dtRackDetModule = new DataTable();
+        System.Data.DataTable dtRackDetModule = new System.Data.DataTable();
 
         dsRackDetModule = csDatabase.GetRackMstDetModule(strRackDetId);
         dtRackDetModule = dsRackDetModule.Tables[0];
@@ -553,10 +574,10 @@ public partial class PlcConvResult : System.Web.UI.Page
     #endregion
 
     #region SearchInsCodeMstList
-    private DataTable SearchInsCodeMstList(String DpsInsCode, String Model, String Katashiki, String Sfx, String Color, String Comment)
+    private System.Data.DataTable SearchInsCodeMstList(String DpsInsCode, String Model, String Katashiki, String Sfx, String Color, String Comment)
     {
         DataSet dsSearch = new DataSet();
-        DataTable dtSearch = new DataTable();
+        System.Data.DataTable dtSearch = new System.Data.DataTable();
 
         try
         {
@@ -585,52 +606,98 @@ public partial class PlcConvResult : System.Web.UI.Page
         }
     }
 
-    public String GetCellAdd(Excel.Worksheet xlRef, int row, int col)
+    public String GetCellAdd(ExcelWorksheet worksheet, int row, int col)
     {
+        //try
+        //{
+        //    xlWorkSheet_range = xlRef.get_Range(xlRef.Cells[row, col], xlRef.Cells[row, col]);
+        //    return GetRangeAdd(xlWorkSheet_range);
+        //}
+        //catch (Exception ex)
+        //{
+        //    GlobalFunc.ShowErrorMessage("Exception Occured while transmit to user " + ex.ToString());
+        //    return "";
+        //}
         try
         {
-            xlWorkSheet_range = xlRef.get_Range(xlRef.Cells[row, col], xlRef.Cells[row, col]);
-            return GetRangeAdd(xlWorkSheet_range);
+            // In EPPlus, getting the address of a single cell is straightforward
+            var cellAddress = worksheet.Cells[row, col].Address;
+            return cellAddress;
         }
         catch (Exception ex)
         {
-            GlobalFunc.ShowErrorMessage("Exception Occured while transmit to user " + ex.ToString());
+            GlobalFunc.ShowErrorMessage("Exception Occured while transmitting to user: " + ex.ToString());
             return "";
         }
     }
 
-    public int GetCellColor(Excel.Range xlRange, String strColor)
+    //public int GetCellColor(Excel.Range xlRange, String strColor)
+    //{
+    //    try
+    //    {
+    //        switch (strColor)
+    //        {
+    //            case "SteelBlue":
+    //                return System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.SteelBlue);
+    //            case "MediumSeaGreen":
+    //                return System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.MediumSeaGreen);
+    //            case "PowderBlue":
+    //                return System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.PowderBlue);
+    //            case "Crimson":
+    //                return System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Crimson);
+    //            case "MediumOrchid":
+    //                return System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.MediumOrchid);
+    //            case "Yellow":
+    //                return System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Yellow);
+    //            case "Gainsboro":
+    //                return System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Gainsboro);
+    //            case "Black":
+    //                return System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Black);
+    //            case "White":
+    //                return System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.White);
+    //            default:
+    //                return System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.White);
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        GlobalFunc.ShowErrorMessage("Exception Occured while converting color " + ex.ToString());
+    //        return 0;
+    //    }
+    //}
+
+    public System.Drawing.Color GetCellColor(string strColor)
     {
         try
         {
             switch (strColor)
             {
                 case "SteelBlue":
-                    return System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.SteelBlue);
+                    return System.Drawing.Color.SteelBlue;
                 case "MediumSeaGreen":
-                    return System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.MediumSeaGreen);
+                    return System.Drawing.Color.MediumSeaGreen;
                 case "PowderBlue":
-                    return System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.PowderBlue);
+                    return System.Drawing.Color.PowderBlue;
                 case "Crimson":
-                    return System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Crimson);
+                    return System.Drawing.Color.Crimson;
                 case "MediumOrchid":
-                    return System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.MediumOrchid);
+                    return System.Drawing.Color.MediumOrchid;
                 case "Yellow":
-                    return System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Yellow);
+                    return System.Drawing.Color.Yellow;
                 case "Gainsboro":
-                    return System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Gainsboro);
+                    return System.Drawing.Color.Gainsboro;
                 case "Black":
-                    return System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Black);
+                    return System.Drawing.Color.Black;
                 case "White":
-                    return System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.White);
+                    return System.Drawing.Color.White;
                 default:
-                    return System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.White);
+                    return System.Drawing.Color.White;
             }
         }
         catch (Exception ex)
         {
-            GlobalFunc.ShowErrorMessage("Exception Occured while converting color " + ex.ToString());
-            return 0;
+            GlobalFunc.ShowErrorMessage("Exception Occurred while converting color: " + ex.ToString());
+            return System.Drawing.Color.White; // Return a default color in case of an error
         }
     }
 
@@ -641,7 +708,7 @@ public partial class PlcConvResult : System.Web.UI.Page
         xlWorkSheet_range.Merge(mergeColumns);
         xlWorkSheet_range.Font.Name = "Arial";
         xlWorkSheet_range.Merge(mergeColumns);
-        
+
         //xlWorkSheet_range.Font.Size = strFontSize;
         switch (b)
         {
@@ -699,16 +766,16 @@ public partial class PlcConvResult : System.Web.UI.Page
     {
         //try
         //{
-            //Response.ClearContent();
-            //Response.ClearHeaders();
-            Response.ContentType = "application/vnd.ms-excel";
-            Response.AppendHeader("Content-Disposition", "attachment; filename=" + strFileName + ".xls");
-            Response.TransmitFile(strFilePath);
-            //File.Delete(strFilePath);
-            //Response.WriteFile(strFilePath);
-            //Response.Flush();
-            //Response.Clear();
-            Response.End();
+        //Response.ClearContent();
+        //Response.ClearHeaders();
+        Response.ContentType = "application/vnd.ms-excel";
+        Response.AppendHeader("Content-Disposition", "attachment; filename=" + strFileName + ".xlsx");
+        Response.TransmitFile(strFilePath);
+        //File.Delete(strFilePath);
+        //Response.WriteFile(strFilePath);
+        //Response.Flush();
+        //Response.Clear();
+        Response.End();
         //}
         //catch (Exception ex)
         //{
