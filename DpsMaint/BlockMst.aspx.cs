@@ -414,7 +414,7 @@ public partial class BlockMst : System.Web.UI.Page
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                LinkButton lb = (LinkButton)e.Row.Cells[17].Controls[0];
+                LinkButton lb = (LinkButton)e.Row.Cells[18].Controls[0];
                 lb.OnClientClick = "return confirm('Confirm delete? ATTENTION : THIS WILL DELETE ALL RACK MASTER DATA REGISTERED UNDER CURRENT BLOCK!');";
             }
         }
@@ -437,7 +437,7 @@ public partial class BlockMst : System.Web.UI.Page
                 GridViewRow selectedRow = ((GridView)e.CommandSource).Rows[index];
                 Session["SessTempPlcNo"] = Convert.ToString(selectedRow.Cells[0].Text);             //Added by YanTeng 08/12/2020
                 Session["SessTempProName"] = Convert.ToString(selectedRow.Cells[1].Text);           //Added by YanTeng 08/12/2020
-                Session["SessTempBlockName"] = Convert.ToString(selectedRow.Cells[4].Text);
+                Session["SessTempBlockName"] = Convert.ToString(selectedRow.Cells[5].Text);
                 GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> attempted to edit Block Name['" + Convert.ToString(selectedRow.Cells[4].Text) + "'] " +
                 "PLC No['" + Convert.ToString(selectedRow.Cells[0].Text) + "'] Proc Name['" + Convert.ToString(selectedRow.Cells[1].Text) + "'] " + 
                 "Group Name['" + Convert.ToString(selectedRow.Cells[2].Text) + "'] Block Seq['" + Convert.ToString(selectedRow.Cells[3].Text) + "'] " +
@@ -454,8 +454,8 @@ public partial class BlockMst : System.Web.UI.Page
                 String strPlcNo = Convert.ToString(selectedRow.Cells[0].Text);
                 String strProcName = Convert.ToString(selectedRow.Cells[1].Text);
                 String strGroupName = Convert.ToString(selectedRow.Cells[2].Text);
-                String strBlockName = Convert.ToString(selectedRow.Cells[4].Text);
-                String strGwNo = Convert.ToString(selectedRow.Cells[5].Text);
+                String strBlockName = Convert.ToString(selectedRow.Cells[5].Text);
+                String strGwNo = Convert.ToString(selectedRow.Cells[6].Text);
                 GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> attempted to delete Block Name['" + Convert.ToString(selectedRow.Cells[4].Text) + "'] " +
                 "PLC No['" + Convert.ToString(selectedRow.Cells[0].Text) + "'] Proc Name['" + Convert.ToString(selectedRow.Cells[1].Text) + "'] " +
                 "Group Name['" + Convert.ToString(selectedRow.Cells[2].Text) + "'] Block Seq['" + Convert.ToString(selectedRow.Cells[3].Text) + "'] " +

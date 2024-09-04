@@ -227,7 +227,7 @@ public class GlobalFunc
         }
         else if (strAisType == "Harigami")
         {
-            sqlQuery = "SELECT DISTINCT (RTRIM(HrgmName) + ' ~ ' + cast(Sfx AS varchar(2)) + ' ~ ' + cast(ColorCode AS varchar(4))) as Description, len((RTRIM(HrgmName) + ' ~ ' + cast(Sfx AS varchar(2)) + ' ~ ' + cast(ColorCode AS varchar(4)))), HrgmItmID AS Name FROM vw_Harigami WHERE HrgmName like '%DPS%' ORDER BY len((RTRIM(HrgmName) + ' ~ ' + cast(Sfx AS varchar(2)) + ' ~ ' + cast(ColorCode AS varchar(4)))), (RTRIM(HrgmName) + ' ~ ' + cast(Sfx AS varchar(2)) + ' ~ ' + cast(ColorCode AS varchar(4))), HrgmItmID";
+            sqlQuery = "SELECT DISTINCT (RTRIM(HrgmName) + ' ~ ' + cast(Sfx AS varchar(2)) + ' ~ ' + cast(ColorCode AS varchar(4))) as Description, len((RTRIM(HrgmName) + ' ~ ' + cast(Sfx AS varchar(2)) + ' ~ ' + cast(ColorCode AS varchar(4)))), HrgmItmID AS Name FROM vw_Harigami ORDER BY len((RTRIM(HrgmName) + ' ~ ' + cast(Sfx AS varchar(2)) + ' ~ ' + cast(ColorCode AS varchar(4)))), (RTRIM(HrgmName) + ' ~ ' + cast(Sfx AS varchar(2)) + ' ~ ' + cast(ColorCode AS varchar(4))), HrgmItmID";
         }
         return ConnQuery.getPisBindingDatasetData(sqlQuery);
     }
@@ -244,7 +244,7 @@ public class GlobalFunc
         else if (strAisType == "Harigami")
         {   //Mpdify by Khor, filter name like '%DPS%' AND
             //sqlQuery = "SELECT DISTINCT (RTRIM(name) + ' - ' + cast(sfx AS varchar(2)) + ' - ' + cast(color AS varchar(4))) as Description, len((RTRIM(name) + ' - ' + cast(sfx AS varchar(2)) + ' - ' + cast(color AS varchar(4)))), item_id AS Name FROM ais_DataHj WHERE row IS NOT NULL ORDER BY len((RTRIM(name) + ' - ' + cast(sfx AS varchar(2)) + ' - ' + cast(color AS varchar(4)))), (RTRIM(name) + ' - ' + cast(sfx AS varchar(2)) + ' - ' + cast(color AS varchar(4))), item_id";
-            sqlQuery = "SELECT DISTINCT (RTRIM(name) + ' ~ ' + cast(sfx AS varchar(2)) + ' ~ ' + cast(color AS varchar(4))) as Description, len((RTRIM(name) + ' ~ ' + cast(sfx AS varchar(2)) + ' ~ ' + cast(color AS varchar(4)))) FROM ais_DataHj WHERE name like '%DPS%' AND row IS NOT NULL ORDER BY len((RTRIM(name) + ' ~ ' + cast(sfx AS varchar(2)) + ' ~ ' + cast(color AS varchar(4)))), (RTRIM(name) + ' ~ ' + cast(sfx AS varchar(2)) + ' ~ ' + cast(color AS varchar(4)))";
+            sqlQuery = "SELECT DISTINCT (RTRIM(name) + ' ~ ' + cast(sfx AS varchar(2)) + ' ~ ' + cast(color AS varchar(4))) as Description, len((RTRIM(name) + ' ~ ' + cast(sfx AS varchar(2)) + ' ~ ' + cast(color AS varchar(4)))) FROM ais_DataHj WHERE row IS NOT NULL ORDER BY len((RTRIM(name) + ' ~ ' + cast(sfx AS varchar(2)) + ' ~ ' + cast(color AS varchar(4)))), (RTRIM(name) + ' ~ ' + cast(sfx AS varchar(2)) + ' ~ ' + cast(color AS varchar(4)))";
         }
         return ConnQuery.getBindingDatasetData(sqlQuery);
     }

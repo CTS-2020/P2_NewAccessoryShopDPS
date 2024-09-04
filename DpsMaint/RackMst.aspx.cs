@@ -552,7 +552,7 @@ public partial class RackMst : System.Web.UI.Page
                 catch (Exception ex)
                 {
                     lblUploadStatus.Text = "Excel file being used by another person. Please closed it ";
-
+                    GlobalFunc.Log(ex.Message);
                 }
  
             }
@@ -638,7 +638,7 @@ public partial class RackMst : System.Web.UI.Page
                 catch (Exception ex3)
                 {
                     Temp_Rack = "";
-
+                    GlobalFunc.Log(ex3.Message);
                 }
                 if (Temp_Rack != "")
                 {
@@ -705,6 +705,7 @@ public partial class RackMst : System.Web.UI.Page
                 catch (Exception ex1)
                 {
                     strGrpname = "";
+                    GlobalFunc.Log(ex1.Message);
                 }
 
 
@@ -716,7 +717,7 @@ public partial class RackMst : System.Web.UI.Page
                 catch (Exception ex2)
                 {
                     strplc_no = 0;
-
+                    GlobalFunc.Log(ex2.Message);
                 }
 
                 try
@@ -727,7 +728,7 @@ public partial class RackMst : System.Web.UI.Page
                 catch (Exception ex3)
                 {
                     strRack_name = "";
-
+                    GlobalFunc.Log(ex3.Message);
                 }
 
                 try
@@ -738,7 +739,7 @@ public partial class RackMst : System.Web.UI.Page
                 catch (Exception ex4)
                 {
                     strproc_name = "";
-
+                    GlobalFunc.Log(ex4.Message);
                 }
 
                 try
@@ -749,7 +750,7 @@ public partial class RackMst : System.Web.UI.Page
                 catch (Exception ex5)
                 {
                     strRow = 0;
-
+                    GlobalFunc.Log(ex5.Message);
                 }
 
                 try
@@ -760,7 +761,7 @@ public partial class RackMst : System.Web.UI.Page
                 catch (Exception ex6)
                 {
                     strcolumn = 0;
-
+                    GlobalFunc.Log(ex6.Message);
                 }
 
                 try
@@ -771,7 +772,7 @@ public partial class RackMst : System.Web.UI.Page
                 catch (Exception ex7)
                 {
                     strblock_name = "";
-
+                    GlobalFunc.Log(ex7.Message);
                 }
 
                 if (strGrpname != "")
@@ -938,7 +939,7 @@ public partial class RackMst : System.Web.UI.Page
                                 catch (Exception ex)
                                 {
                                     errmsg = errmsg + ",Part/Color data got problem <br/>";
-
+                                    GlobalFunc.Log(ex.Message);
                                 }
 
 
@@ -983,6 +984,7 @@ public partial class RackMst : System.Web.UI.Page
                                 catch (Exception ex)
                                 {
                                     errmsg = errmsg + " Module data.got probem <br/> " ;
+                                    GlobalFunc.Log(ex.Message);
                                 }
 
 
@@ -1257,7 +1259,7 @@ public partial class RackMst : System.Web.UI.Page
                         catch (Exception ex)
                         {
                             GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> Not able to update Rack Master Location '" + strRackLoc + "'");
-
+                            GlobalFunc.Log(ex.Message);
                         }
 
 
@@ -1282,7 +1284,7 @@ public partial class RackMst : System.Web.UI.Page
                     catch (Exception ex)
                     {
 
-                        GlobalFunc.Log(ex);
+                        GlobalFunc.Log(ex.Message);
                     }
 
  
@@ -1330,6 +1332,7 @@ public partial class RackMst : System.Web.UI.Page
         }
         catch (Exception ex)
         {
+            GlobalFunc.Log(ex.Message);
             throw (ex);
         }
 

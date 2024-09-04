@@ -1462,7 +1462,7 @@ public class csDatabase
         }
         else if (strAisType == "Harigami")
         {
-            sqlQuery = "SELECT * FROM vw_Harigami WHERE HrgmName LIKE '%DPS%' ";
+            sqlQuery = "SELECT * FROM vw_Harigami ";
 
             if (strAisItemId != "ALL")
             {
@@ -3669,7 +3669,7 @@ public class csDatabase
 
     public static Boolean ChkLmAddMaxCnt(String strPlcNo, String strProcName, String strBlockName)
     {
-        String sqlQuery = "SELECT COUNT(DISTINCT(LmAdd.module_add) AS ReturnField from dt_LampModuleAddMst LmAdd, dt_RackMst RackMst, dt_RackMstDet RackMstDet WHERE LmAdd.rack_det_id != '' AND LmAdd.plc_no = '" + strPlcNo + "' AND LmAdd.proc_name = '" + strProcName + "' AND RackMst.block_name = '" + strBlockName + "' AND LmAdd.proc_name = RackMst.proc_name AND LmAdd.rack_det_id = RackMstDet.rack_det_id AND RackMst.rack_name = RackMstDet.rack_name";
+        String sqlQuery = "SELECT COUNT(DISTINCT(LmAdd.module_add)) AS ReturnField from dt_LampModuleAddMst LmAdd, dt_RackMst RackMst, dt_RackMstDet RackMstDet WHERE LmAdd.rack_det_id != '' AND LmAdd.plc_no = '" + strPlcNo + "' AND LmAdd.proc_name = '" + strProcName + "' AND RackMst.block_name = '" + strBlockName + "' AND LmAdd.proc_name = RackMst.proc_name AND LmAdd.rack_det_id = RackMstDet.rack_det_id AND RackMst.rack_name = RackMstDet.rack_name";
         try
         {
             int iLmAddCnt = Convert.ToInt32(ConnQuery.getReturnFieldExecuteReader(sqlQuery));
@@ -3694,7 +3694,7 @@ public class csDatabase
     public static Boolean ChkDuplicateLmAddPhysical(String strPlcNo, String strProcName, String strBlockName)
     {
         //Modify WFKHOR 21-10-2020
-        String sqlQuery = "SELECT COUNT (physical_add) AS ReturnField FROM dt_LampModuleAddMst A  INNER JOIN dt_PhysicalAddMst B ON A.proc_name = B.proc_name AND A.module_add = B.module_add INNER JOIN dt_RackMst C ON C.plc_no = A.plc_no AND C.proc_name = A.proc_name AND A.module_name = C.block_name WHERE A.proc_name = '" + strProcName + "' AND A.plc_no = '" + strPlcNo + "'  AND C.block_name = '" + strBlockName + "' GROUP BY B.physical_add ORDER BY ReturnField DESC";
+        String sqlQuery = "SELECT COUNT (physical_add) AS ReturnField FROM dt_LampModuleAddMst A  INNER JOIN dt_PhysicalAddMst B ON A.proc_name = B.proc_name AND A.module_add = B.module_add WHERE A.proc_name = '" + strProcName + "' AND A.plc_no = '" + strPlcNo + "' GROUP BY B.physical_add,A.module_name ORDER BY ReturnField DESC";
         try
         {
             int iLmAddCnt = Convert.ToInt32(ConnQuery.getReturnFieldExecuteReader(sqlQuery));

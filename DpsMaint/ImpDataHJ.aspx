@@ -18,12 +18,12 @@
             <table class="table" width="100%" border="0">
                 <tr>
                 <td colspan="4">
-                    <span class="titlemain"><asp:Label ID="lblTitleMain" runat="server" Text="Import Harigami/Jundate Data"></asp:Label></span>
+                    <span class="titlemain"><asp:Label ID="lblTitleMain" runat="server" Text="Import Harigami Data"></asp:Label></span>
                 </td>
                 </tr>
                 <tr>
                 <td colspan="4" class="titlesub">
-                    <span class="titlesubfont"><asp:Label ID="lblTitleSub1" runat="server" Text="Import Harigami/Jundate Data"></asp:Label></span>
+                    <span class="titlesubfont"><asp:Label ID="lblTitleSub1" runat="server" Text="Import Harigami Data"></asp:Label></span>
                 </td>
                 </tr>
                 <tr>
@@ -52,8 +52,8 @@
                     <td colspan="4">
                         <asp:GridView ID="gvDataHJList" runat="server" AutoGenerateColumns="false" AllowPaging="True" CssClass="DataTable" OnPageIndexChanging="gvDataHJList_PageIndexChanging" AllowSorting="True" EmptyDataText="No Data">
                             <Columns>
-                                <asp:BoundField HeaderText="Harigami/Jundate ID" DataField="id"/>
-                                <asp:BoundField HeaderText="Harigami/Jundate Item ID" DataField="item_id"/>
+                                <asp:BoundField HeaderText="Harigami ID" DataField="id"/>
+                                <asp:BoundField HeaderText="Harigami Item ID" DataField="item_id"/>
                                 <asp:BoundField HeaderText="Rev No" DataField="rev_no"/>
                                 <asp:BoundField HeaderText="Col" DataField="col"/>
                                 <asp:BoundField HeaderText="Row" DataField="row"/>

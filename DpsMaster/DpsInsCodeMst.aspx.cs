@@ -312,6 +312,8 @@ public partial class DpsInsCodeMst : System.Web.UI.Page
     {
         try
         {
+            if (Convert.ToString(e.CommandArgument) == "First") return;
+            if (Convert.ToString(e.CommandArgument) == "Last") return;
             Int32 index = Convert.ToInt32(e.CommandArgument);            
 
             if (e.CommandName == "EditRecord")
