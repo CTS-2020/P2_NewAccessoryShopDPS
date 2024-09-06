@@ -357,6 +357,7 @@ public partial class RackMst : System.Web.UI.Page
     #endregion
 
     #region Patch Rack Location
+    // not using in #3 UAT
     protected void PatchRackLocData()
     {
         #region Previous Code  ***ace_20160416_001

@@ -22,6 +22,7 @@ public partial class SelectionModuleAdd : System.Web.UI.Page
     #region PageLoad
     protected void Page_Load(object sender, EventArgs e)
     {
+        //rack_name=L1GW1+Rack+1&part_id=L1GW1+Rack+1^1^2&plc_no=1&proc_name=DPS
         String strRackName = Convert.ToString(Request.QueryString["rack_name"]);
         String strPartId = Convert.ToString(Request.QueryString["part_id"]);
         String strPlcNo = Convert.ToString(Request.QueryString["plc_no"]);
@@ -105,6 +106,7 @@ public partial class SelectionModuleAdd : System.Web.UI.Page
     #region BindGridView
     private bool BindGridView(DataTable dtLampModuleAddMst)
     {
+        //define at front to determine which column to show.
         try
         {
             DataView dvLampModuleAddMst = new DataView(dtLampModuleAddMst);
@@ -147,6 +149,7 @@ public partial class SelectionModuleAdd : System.Web.UI.Page
             Boolean blDelFlg = csDatabase.DelRackMstDetModule(strRackMstDetId, strCurUser);
             if (blDelFlg)
             {
+                //ENHANCEMENT NEEDED
                 csDatabase.UpdLampModuleLoc(strProcName, "", "", strRackMstDetId, "");
                 csDatabase.UpdLmChange(strPlcNo, strProcName, strBlockName, "");
                 GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> emptied Rack Master Location '" + strRackLoc + "' Module Address");

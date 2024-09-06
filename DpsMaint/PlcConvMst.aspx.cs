@@ -325,6 +325,7 @@ public partial class PlcConvMst : System.Web.UI.Page
     #endregion
 
     #region Get Rack Master
+    //currently in #3 not using.
     protected void getRackMst(out String strRackMstRow, out String strRackMstCol)
     {
         String strProcName = Convert.ToString(ddProcName.SelectedItem);
@@ -362,6 +363,7 @@ public partial class PlcConvMst : System.Web.UI.Page
     #endregion
 
     #region Generate Table
+    //currently in #3 not using.
     private void genTable(String strRackMstRow, String strRackMstCol)
     {
         try
@@ -502,6 +504,7 @@ public partial class PlcConvMst : System.Web.UI.Page
     #endregion
 
     #region Get AIS String
+    //currently in #3 not using.(used in genTable)
     protected String getAisDetString(String strRackDetId)
     {
         String strRackName = Convert.ToString(ddRackName.SelectedValue);
@@ -584,6 +587,7 @@ public partial class PlcConvMst : System.Web.UI.Page
     #endregion
 
     #region Get Module Address String
+    //currently in #3 not using.(used in genTable)
     protected String getModDetString(String strRackDetId)
     {
         String strRackName = Convert.ToString(ddRackName.SelectedValue);
@@ -635,6 +639,7 @@ public partial class PlcConvMst : System.Web.UI.Page
     #endregion
 
     #region Rack Light Simulation
+    //currently in #3 not using.(used in genTable)
     protected Boolean RackLightSimulation(String strRefPartsNum, String strRefColorSfx)
     {
         if (ddInsCode.SelectedIndex != 0)

@@ -711,6 +711,7 @@ public class csDatabase
         }
     }
 
+    //ENHANCEMENT NEEDED
     public static Boolean DelPlcMst(String strPlcNo, String strProcName)
     {
         List<String> sqlQuery = new List<String>();
@@ -777,70 +778,6 @@ public class csDatabase
             return false;
         }
     }
-
-    //public static void DelPlcAllRem(String strPlcNo, String strProcName)
-    //{
-    //    String sqlQuery = "";
-
-    //    //Delete All Group
-    //    sqlQuery = "DELETE FROM dt_GroupMst WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'";
-    //    Boolean blDelGroup = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Delete All Block
-    //    sqlQuery = "DELETE FROM dt_BlockMst WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'";
-    //    Boolean blDelBlock = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Delete All Rack Detail
-    //    DataSet dsRackMst = new DataSet();
-    //    DataTable dtRackMst = new DataTable();
-
-    //    dsRackMst = SrcRackMst("", strPlcNo, strProcName, "", "");
-    //    dtRackMst = dsRackMst.Tables[0];
-
-    //    if (dtRackMst.Rows.Count > 0)
-    //    {
-    //        for (int iRackCnt = 0; iRackCnt < dtRackMst.Rows.Count; iRackCnt++)
-    //        {
-    //            String strRackName = "";
-
-    //            if (Convert.ToString(dtRackMst.Rows[iRackCnt]["rack_name"]).Trim() != "")
-    //            {
-    //                strRackName = Convert.ToString(dtRackMst.Rows[iRackCnt]["rack_name"]);
-    //            }
-
-    //            sqlQuery = "DELETE FROM dt_RackMstDet WHERE rack_name = '" + strRackName + "' AND plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'";
-    //            Boolean blDelRackDet = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //            //Delete All Part Rack Loc
-    //            sqlQuery = "UPDATE ais_PartsNum SET rack_det_id = NULL, rack_loc = NULL WHERE rack_det_id LIKE '" + strRackName + "^%'";
-    //            Boolean blDelPartsNum = ConnQuery.ExecuteQuery(sqlQuery);
-    //        }
-    //    }
-
-    //    //Delete All Rack
-    //    sqlQuery = "DELETE FROM dt_RackMst WHERE proc_name = '" + strProcName + "' AND plc_no = '" + strPlcNo + "'";
-    //    Boolean blDelRack = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Delete All Lamp Module Address
-    //    sqlQuery = "DELETE FROM dt_LampModuleAddMst WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'";
-    //    Boolean blDelLmAdd = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Delete All Lamp Module Mode Conversion
-    //    sqlQuery = "DELETE FROM conv_LampModuleMode WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'";
-    //    Boolean blDelLmMode = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Delete All Instruction Code Conversion
-    //    sqlQuery = "DELETE FROM conv_InsCode WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'";
-    //    Boolean blDelInsCodeConv = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Delete All Instruction Code Map Conversion
-    //    sqlQuery = "DELETE FROM conv_InsCodeMap WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'";
-    //    Boolean blDelInsCodeMap = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Delete All Block Conversion
-    //    sqlQuery = "DELETE FROM conv_BlockMst WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'";
-    //    Boolean blUpdBlockConv = ConnQuery.ExecuteQuery(sqlQuery);
-    //}
 
     public static Boolean SvPlcMst(String strPlcNo, String strProcName, String strIpAdd, String strPlcModel, String strPlcNwStation, String strPlcLogicalStation, String strEnable, String strCurUser)
     {
@@ -975,117 +912,6 @@ public class csDatabase
         }
     }
 
-    //public static void UpdPlcAllRem(String strPlcNo, String strProcName, String tempPlcNo, String strCurUser)
-    //{
-    //    String sqlQuery = "";
-
-    //    //Update All Group
-    //    sqlQuery = "UPDATE dt_GroupMst SET plc_no = '" + strPlcNo + "', proc_name = '" + strProcName + "', last_upd_by = '" + strCurUser + "', last_upd_dt = CURRENT_TIMESTAMP WHERE plc_no = '" + tempPlcNo + "'";
-    //    Boolean blUpdGroup = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Update All Block
-    //    sqlQuery = "UPDATE dt_BlockMst SET plc_no = '" + strPlcNo + "', proc_name = '" + strProcName + "', last_upd_by = '" + strCurUser + "', last_upd_dt = CURRENT_TIMESTAMP WHERE plc_no = '" + tempPlcNo + "'";
-    //    Boolean blUpdBlock = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Update All Rack
-    //    sqlQuery = "UPDATE dt_RackMst SET plc_no = '" + strPlcNo + "', proc_name = '" + strProcName + "', last_upd_by = '" + strCurUser + "', last_upd_dt = CURRENT_TIMESTAMP WHERE plc_no = '" + tempPlcNo + "'";
-    //    Boolean blUpdRack = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Update All Rack Det
-    //    sqlQuery = "DELETE FROM dt_RackMstDet SET plc_no = '" + strPlcNo + "', proc_name = '" + strProcName + "', last_upd_by = '" + strCurUser + "', last_upd_dt = CURRENT_TIMESTAMP WHERE plc_no = '" + tempPlcNo + "'";
-    //    Boolean blDelRackDet = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Update All Lamp Module Address
-    //    sqlQuery = "UPDATE dt_LampModuleAddMst SET plc_no = '" + strPlcNo + "', proc_name = '" + strProcName + "', last_upd_by = '" + strCurUser + "', last_upd_dt = CURRENT_TIMESTAMP WHERE plc_no = '" + tempPlcNo + "'";
-    //    Boolean blUpdLmAdd = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Update All Block Conversion
-    //    sqlQuery = "UPDATE conv_BlockMst SET plc_no = '" + strPlcNo + "', proc_name = '" + strProcName + "' WHERE plc_no = '" + tempPlcNo + "'";
-    //    Boolean blUpdBlockConv = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Update All Lamp Module Mode Conversion
-    //    sqlQuery = "UPDATE conv_LampModuleMode SET plc_no = '" + strPlcNo + "', proc_name = '" + strProcName + "' WHERE plc_no = '" + tempPlcNo + "'";
-    //    Boolean blUpdLmMode = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Update All Instruction Code Conversion
-    //    sqlQuery = "UPDATE conv_InsCode SET plc_no = '" + strPlcNo + "', proc_name = '" + strProcName + "' WHERE plc_no = '" + tempPlcNo + "'";
-    //    Boolean blUpdInsCodeConv = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Update All Instruction Code Map Conversion
-    //    sqlQuery = "UPDATE conv_InsCodeMap SET plc_no = '" + strPlcNo + "', proc_name = '" + strProcName + "' WHERE plc_no = '" + tempPlcNo + "'";
-    //    Boolean blUpdInsCodeMap = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    sqlQuery = "UPDATE dt_PlcPointerMst SET plc_no = '" + strPlcNo + "' WHERE plc_no = '" + tempPlcNo + "'";
-    //    Boolean blUpdPlcPointerMst = ConnQuery.ExecuteQuery(sqlQuery);
-    //}
-
-    //public static void SvPlcMstConv(String strPlcNo, String strProcName)
-    //{
-    //    strPlcNo = strPlcNo.Replace("'", "''");
-    //    strProcName = strProcName.Replace("'", "''");
-
-    //    String sqlQuery = "SELECT COUNT(ins_code_cnt) AS CountRow FROM conv_InsCode WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'";
-    //    if (!ConnQuery.chkExistData(sqlQuery))
-    //    {
-    //        for (int iInsCodeCnt = 1; iInsCodeCnt <= 299; iInsCodeCnt++)
-    //        {
-    //            sqlQuery = "INSERT INTO conv_InsCode (plc_no, proc_name, ins_code_cnt) VALUES ('" + strPlcNo + "', '" + strProcName + "', '" + iInsCodeCnt + "')";
-    //            ConnQuery.ExecuteQuery(sqlQuery);
-    //        }
-    //    }
-    //}
-
-    //public static void SvPlcMstConvMap(String strPlcNo, String strProcName)
-    //{
-    //    strPlcNo = strPlcNo.Replace("'", "''");
-    //    strProcName = strProcName.Replace("'", "''");
-
-    //    String sqlQuery = "SELECT COUNT(ins_code_cnt) AS CountRow FROM conv_InsCodeMap WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'";
-    //    if (!ConnQuery.chkExistData(sqlQuery))
-    //    {
-    //        for (int iInsCodeCnt = 1; iInsCodeCnt <= 299; iInsCodeCnt++)
-    //        {
-    //            sqlQuery = "INSERT INTO conv_InsCodeMap (plc_no, proc_name, ins_code_cnt) VALUES ('" + strPlcNo + "', '" + strProcName + "', '" + iInsCodeCnt + "')";
-    //            ConnQuery.ExecuteQuery(sqlQuery);
-    //        }
-    //    }
-    //}
-
-    //public static void SvLmMode(String strPlcNo, String strProcName)
-    //{
-    //    strPlcNo = strPlcNo.Replace("'", "''");
-    //    strProcName = strProcName.Replace("'", "''");
-
-    //    for (int iGwNo = 1; iGwNo <= 12; iGwNo++)
-    //    {
-    //        String sqlQuery = "SELECT COUNT(mode_cnt) AS CountRow FROM conv_LampModuleMode WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND gw_no = '" + iGwNo + "'";
-    //        if (!ConnQuery.chkExistData(sqlQuery))
-    //        {
-    //            for (int iModeCnt = 1; iModeCnt <= 32; iModeCnt++)
-    //            {
-    //                sqlQuery = "INSERT INTO conv_LampModuleMode (plc_no, proc_name, gw_no, mode_cnt) VALUES ('" + strPlcNo + "', '" + strProcName + "', '" + iGwNo + "', '" + iModeCnt + "')";
-    //                ConnQuery.ExecuteQuery(sqlQuery);
-    //            }
-    //        }
-    //    }
-    //}
-
-    //public static void SvBlockMstConv(String strPlcNo, String strProcName)
-    //{
-    //    strPlcNo = strPlcNo.Replace("'", "''");
-    //    strProcName = strProcName.Replace("'", "''");
-
-    //    for (int iGwNo = 1; iGwNo <= 12; iGwNo++)
-    //    {
-    //        String sqlQuery = "SELECT COUNT(gw_no) AS CountRow FROM conv_BlockMst WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND gw_no = '" + iGwNo + "'";
-    //        if (!ConnQuery.chkExistData(sqlQuery))
-    //        {
-    //            sqlQuery = "INSERT INTO conv_BlockMst (plc_no, proc_name, gw_no) VALUES ('" + strPlcNo + "', '" + strProcName + "', '" + iGwNo + "')";
-    //            ConnQuery.ExecuteQuery(sqlQuery);
-    //        }
-    //    }
-    //}
-
     public static Boolean ChkPlcMstMaxCnt()
     {
         String sqlQuery = "SELECT COUNT(plc_no) AS ReturnField FROM dt_DpsPlcMst";
@@ -1108,29 +934,6 @@ public class csDatabase
             return false;
         }
     }
-
-    //public static Boolean ResetPointer(String strPlcNo)
-    //{
-    //    String sqlQuery = "SELECT COUNT(plc_no) AS CountRow FROM dt_PlcPointerMst WHERE plc_no = '" + strPlcNo + "'";
-    //    if (ConnQuery.chkExistData(sqlQuery))
-    //    {
-    //        sqlQuery = "UPDATE dt_PlcPointerMst SET pointer = '1' WHERE plc_no = '" + strPlcNo + "'";
-    //    }
-    //    else
-    //    {
-    //        sqlQuery = "INSERT INTO dt_PlcPointerMst (plc_no, flag_type, pointer) VALUES ('" + strPlcNo + "', 'R', '1');INSERT INTO dt_PlcPointerMst (plc_no, flag_type, pointer) VALUES ('" + strPlcNo + "', 'W', '1');";
-    //    }
-    //    try
-    //    {
-    //        return ConnQuery.ExecuteQuery(sqlQuery);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        GlobalFunc.Log(ex);
-    //        GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
-    //        return false;
-    //    }
-    //}
 
     public static Boolean ChkDuplicateIpAdd(String strIpAdd, String strPlcNo)
     {
@@ -1873,8 +1676,6 @@ public class csDatabase
         }
 
         //Modified by YanTeng 14/09/2020
-        //String sqlQuery = "SELECT * FROM dt_LampModuleAddMst WHERE module_add != '' " + filterCriteria + " ORDER BY plc_no, proc_name, len(module_add), module_add";
-        //String sqlQuery = "SELECT A.plc_model, B.* FROM dt_DpsPlcMst A INNER JOIN dt_LampModuleAddMst B ON A.plc_no = B.plc_no WHERE B.module_add != '' " + filterCriteria + " ORDER BY B.plc_no, B.proc_name, len(B.module_add), B.module_add";
         String sqlQuery = "SELECT PlcMst.plc_model, LmAdd.*, PhyAdd.physical_add FROM dt_DpsPlcMst PlcMst INNER JOIN dt_LampModuleAddMst LmAdd ON PlcMst.plc_no = LmAdd.plc_no LEFT JOIN dt_PhysicalAddMst PhyAdd ON LmAdd.proc_name = PhyAdd.proc_name AND LmAdd.module_add = PhyAdd.module_add WHERE LmAdd.module_add != '' " + filterCriteria + " ORDER BY LmAdd.plc_no, LmAdd.proc_name, len(LmAdd.module_add), LmAdd.module_add ";
 
         try
@@ -1899,7 +1700,6 @@ public class csDatabase
         sqlQuery.Add("UPDATE conv_LampModuleAddMatching SET lm_add = NULL WHERE lm_add = '" + strModuleAdd + "' and proc_name = '" + strModuleProcName + "'");
 
         //Delete All Rack Master Detail
-        //sqlQuery.Add("UPDATE dt_RackMstDet SET module_add = NULL, module_name = NULL WHERE module_add = '" + strModuleAdd + "'");  //***ace_20160416_001
         sqlQuery.Add("UPDATE dt_RackMstDet SET module_add = NULL, module_name = NULL, last_upd_by = '" + strCurUser + "', last_upd_dt = CURRENT_TIMESTAMP WHERE module_add = '" + strModuleAdd + "'");
         try
         {
@@ -1950,7 +1750,6 @@ public class csDatabase
         sqlQuery.Add("UPDATE conv_LampModuleAddMatching SET lm_add = '" + strModuleAdd + "' WHERE lm_add = '" + tempModuleAdd + "'");
 
         //Update All Rack Master Detail
-        //sqlQuery.Add("UPDATE dt_RackMstDet SET module_add = '" + strModuleAdd + "', module_name = '" + strModuleName + "' WHERE module_add = '" + tempModuleAdd + "'");  //***ace_20160416_001
         sqlQuery.Add("UPDATE dt_RackMstDet SET module_add = '" + strModuleAdd + "', module_name = '" + strModuleName + "', last_upd_by = '" + strCurUser + "', last_upd_dt = CURRENT_TIMESTAMP WHERE module_add = '" + tempModuleAdd + "'");
         try
         {
@@ -1987,32 +1786,6 @@ public class csDatabase
             return false;
         }
     }
-
-    //public static void UpdLampModuleAddRem(String strModuleAdd, String strModuleName, String tempModuleAdd)
-    //{
-    //    String sqlQuery = "";
-
-    //    //Update All Lamp Module Address Matching
-    //    sqlQuery = "UPDATE conv_LampModuleAddMatching SET lm_add = '" + strModuleAdd + "' WHERE lm_add = '" + tempModuleAdd + "'";
-    //    Boolean blUpdLmAdd = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Update All Rack Master Detail
-    //    sqlQuery = "UPDATE dt_RackMstDet SET module_add = '" + strModuleAdd + "', module_name = '" + strModuleName + "' WHERE module_add = '" + tempModuleAdd + "'";
-    //    Boolean blUpdLmMode = ConnQuery.ExecuteQuery(sqlQuery);
-    //}
-
-    //public static void DelLampModuleAddMstRem(String strModuleProcName, String strModuleAdd)
-    //{
-    //    String sqlQuery = "";
-
-    //    //Delete All Lamp Module Address Matching
-    //    sqlQuery = "UPDATE conv_LampModuleAddMatching SET lm_add = NULL WHERE lm_add = '" + strModuleAdd + "' and proc_name = '" + strModuleProcName + "'";
-    //    Boolean blUpdLmAdd = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Delete All Rack Master Detail
-    //    sqlQuery = "UPDATE dt_RackMstDet SET module_add = NULL, module_name = NULL WHERE module_add = '" + strModuleAdd + "'";
-    //    Boolean blUpdLmMode = ConnQuery.ExecuteQuery(sqlQuery);
-    //}
     #endregion
 
     #region Group Master
@@ -2055,6 +1828,7 @@ public class csDatabase
         }
     }
 
+    //ENHANCEMENT NEEDED
     public static Boolean DelGroupMst(String strGroupID, String strPlcNo, String strProcName, String strGroupName, String strGroupLine)
     {
 
@@ -2085,9 +1859,11 @@ public class csDatabase
 
                 sqlQuery.Add("DELETE FROM dt_RackMstDet WHERE rack_name = '" + strRackName + "' AND plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'");
 
+                //ENHANCEMENT NEEDED
                 //Delete All Lamp Module Address
                 sqlQuery.Add("UPDATE dt_LampModuleAddMst SET rack_det_id = NULL, rack_loc = NULL WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND rack_det_id LIKE '" + strRackName + "^%'");
 
+                //ENHANCEMENT NEEDED
                 //Delete All Part Rack Loc
                 sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = NULL, rack_loc = NULL WHERE rack_det_id LIKE '" + strRackName + "^%'");
             }
@@ -2146,95 +1922,6 @@ public class csDatabase
             return false;
         }
     }
-
-    //public static void DelGroupMstRem(String strPlcNo, String strProcName, String strGroupID, String strGroupName)
-    //{
-    //    String sqlQuery = "";
-
-    //    //Delete All Block
-    //    sqlQuery = "DELETE FROM dt_BlockMst WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND group_name = '" + strGroupName + "'";
-    //    Boolean blDelBlock = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Delete All Rack Detail
-    //    DataSet dsRackMst = new DataSet();
-    //    DataTable dtRackMst = new DataTable();
-
-    //    dsRackMst = SrcRackMst("", strPlcNo, strProcName, strGroupName, "");
-    //    dtRackMst = dsRackMst.Tables[0];
-
-    //    if (dtRackMst.Rows.Count > 0)
-    //    {
-    //        for (int iRackCnt = 0; iRackCnt < dtRackMst.Rows.Count; iRackCnt++)
-    //        {
-    //            String strRackName = "";
-
-    //            if (Convert.ToString(dtRackMst.Rows[iRackCnt]["rack_name"]).Trim() != "")
-    //            {
-    //                strRackName = Convert.ToString(dtRackMst.Rows[iRackCnt]["rack_name"]);
-    //            }
-
-    //            sqlQuery = "DELETE FROM dt_RackMstDet WHERE rack_name = '" + strRackName + "' AND plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'";
-    //            Boolean blDelRackDet = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //            //Delete All Lamp Module Address
-    //            sqlQuery = "UPDATE dt_LampModuleAddMst SET rack_det_id = NULL, rack_loc = NULL WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND rack_det_id LIKE '" + strRackName + "^%'";
-    //            Boolean blDelLmAdd = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //            //Delete All Part Rack Loc
-    //            sqlQuery = "UPDATE ais_PartsNum SET rack_det_id = NULL, rack_loc = NULL WHERE rack_det_id LIKE '" + strRackName + "^%'";
-    //            Boolean blDelPartsNum = ConnQuery.ExecuteQuery(sqlQuery);
-    //        }
-    //    }
-
-    //    //Delete All Rack
-    //    sqlQuery = "DELETE FROM dt_RackMst WHERE proc_name = '" + strProcName + "' AND group_name = '" + strGroupName + "' AND plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'";
-    //    Boolean blDelRack = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Delete All Group Conversion
-    //    sqlQuery = "DELETE FROM conv_GroupMst WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND group_id = '" + strGroupID + "' AND group_name = '" + strGroupName + "'";
-    //    Boolean blDelGroupConv = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Select All Gateway then clear conv_InsCodeMap , conv_LampModuleAddMatching , conv_LampModuleMode , conv_LampModuleModeRack
-    //    DataSet dsConv = new DataSet();
-    //    DataTable dtConv = new DataTable();
-
-    //    sqlQuery = "SELECT * FROM conv_BlockMst WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND group_id = '" + strGroupID + "'";
-    //    dsConv = ConnQuery.getBindingDatasetData(sqlQuery);
-    //    dtConv = dsConv.Tables[0];
-
-    //    if (dtConv.Rows.Count > 0)
-    //    {
-    //        for (int iRackCnt = 0; iRackCnt < dtConv.Rows.Count; iRackCnt++)
-    //        {
-    //            String tmpGwNo = "";
-
-    //            if (Convert.ToString(dtConv.Rows[iRackCnt]["gw_no"]).Trim() != "")
-    //            {
-    //                tmpGwNo = Convert.ToString(dtConv.Rows[iRackCnt]["gw_no"]);
-    //            }
-
-    //            //Delete Instruction Code Mapping Conversion
-    //            sqlQuery = "UPDATE conv_InsCodeMap SET [" + tmpGwNo + "] = NULL WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'";
-    //            Boolean blClrInsCodeMap = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //            //Delete Lamp Module Address Matching Conversation
-    //            sqlQuery = "DELETE FROM conv_LampModuleAddMatching WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND gw_no = '" + tmpGwNo + "'";
-    //            Boolean blClrLmAddMatchConv = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //            //Delete All Lamp Module Mode
-    //            sqlQuery = "UPDATE conv_LampModuleMode SET mode_data = NULL WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND gw_no = '" + tmpGwNo + "'";
-    //            Boolean blClrLmModeConv = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //            //Delete All Lamp Module Mode Rack
-    //            sqlQuery = "DELETE FROM conv_LampModuleModeRack WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND gw_no = '" + tmpGwNo + "'";
-    //            Boolean blClrLmModeRackConv = ConnQuery.ExecuteQuery(sqlQuery);
-    //        }
-    //    }
-
-    //    //Delete All Block Conversion
-    //    sqlQuery = "UPDATE conv_BlockMst SET group_id = NULL , block_seq = NULL , block_name = NULL WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND group_id = '" + strGroupID + "'";
-    //    Boolean blDelBlockConv = ConnQuery.ExecuteQuery(sqlQuery);
-    //}
 
     public static Boolean SvGroupMst(String strGroupID, String strGroupName, String strPlcNo, String strProcName, String strCurUser, String strGroupLine)
     {
@@ -2464,6 +2151,7 @@ public class csDatabase
                 //Delete All Lamp Module Address
                 sqlQuery.Add("UPDATE dt_LampModuleAddMst SET rack_det_id = NULL, rack_loc = NULL WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND rack_det_id LIKE '" + strRackName + "^%'");
 
+                //ENHANCEMENT NEEDED
                 //Delete All Part Rack Loc
                 sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = NULL, rack_loc = NULL WHERE rack_det_id LIKE '" + strRackName + "^%'");
             }
@@ -2528,6 +2216,7 @@ public class csDatabase
             return false;
         }
     }
+
 
     public static Boolean UpdBlockMst(String strPlcNo, String strBlockSeq, String strBlockName, String strGwNo, String strStartLm, String strEndLm, String strProcName, String strGroupName, String strStartModuleType, String strEndModuleType, String strLightingWI, String strLightingERR, String strColorWI, String strColorERR, String strCurUser, String tempBlockName)
     {
@@ -2640,98 +2329,6 @@ public class csDatabase
             return true;
         }
     }
-
-    //public static void UpdBlockMstRem(String strPlcNo, String strProcName, String strGroupName, String strBlockName, String strGwNo, String strBlockSeq, String tempBlockName)
-    //{
-    //    String sqlQuery = "";
-
-    //    sqlQuery = "SELECT group_id AS ReturnField FROM conv_GroupMst WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND group_name = '" + strGroupName + "'";
-    //    String strGroupID = ConnQuery.getReturnFieldExecuteReader(sqlQuery);
-
-    //    sqlQuery = "SELECT gw_no AS ReturnField FROM conv_BlockMst WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND group_id = '" + strGroupID + "' AND block_name = '" + tempBlockName + "'";
-    //    String tmpGwNo = ConnQuery.getReturnFieldExecuteReader(sqlQuery);
-
-    //    //Update All Rack
-    //    sqlQuery = "UPDATE dt_RackMst SET block_name = '" + strBlockName + "', group_name = '" + strGroupName + "' WHERE proc_name = '" + strProcName + "' AND block_name = '" + tempBlockName + "'";
-    //    Boolean blUpdRack = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Update All Block Conversion
-    //    sqlQuery = "UPDATE conv_BlockMst SET group_id = '" + strGroupID + "', gw_no = '" + strGwNo + "', block_seq = '" + strBlockSeq + "', block_name = '" + strBlockName + "' WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND block_name = '" + tempBlockName + "'";
-    //    Boolean blUpdBlockConv = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Update All Ins Code Map
-    //    if (tmpGwNo != "")
-    //    {
-    //        for (int iInsCodeCnt = 1; iInsCodeCnt <= 299; iInsCodeCnt++)
-    //        {
-    //            sqlQuery = "UPDATE conv_InsCodeMap SET [" + strGwNo + "] = (SELECT [" + tmpGwNo + "] FROM conv_InsCodeMap WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND ins_code_cnt = '" + iInsCodeCnt + "') WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND ins_code_cnt = '" + iInsCodeCnt + "'";
-    //            Boolean blUpdInsCodeMapConv = ConnQuery.ExecuteQuery(sqlQuery);
-    //        }
-    //    }
-    //}
-
-    //public static void DelBlockMstRem(String strPlcNo, String strProcName, String strGroupName, String strBlockName, String strGwNo)
-    //{
-    //    String sqlQuery = "";
-
-    //    sqlQuery = "SELECT group_id AS ReturnField FROM conv_GroupMst WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND group_name = '" + strGroupName + "'";
-    //    String strGroupID = ConnQuery.getReturnFieldExecuteReader(sqlQuery);
-
-    //    //Delete All Rack Detail
-    //    DataSet dsRackMst = new DataSet();
-    //    DataTable dtRackMst = new DataTable();
-
-    //    dsRackMst = SrcRackMst("", strPlcNo, strProcName, strGroupName, strBlockName);
-    //    dtRackMst = dsRackMst.Tables[0];
-
-    //    if (dtRackMst.Rows.Count > 0)
-    //    {
-    //        for (int iRackCnt = 0; iRackCnt < dtRackMst.Rows.Count; iRackCnt++)
-    //        {
-    //            String strRackName = "";
-
-    //            if (Convert.ToString(dtRackMst.Rows[iRackCnt]["rack_name"]).Trim() != "")
-    //            {
-    //                strRackName = Convert.ToString(dtRackMst.Rows[iRackCnt]["rack_name"]);
-    //            }
-
-    //            sqlQuery = "DELETE FROM dt_RackMstDet WHERE rack_name = '" + strRackName + "'";
-    //            Boolean blDelRackDet = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //            //Delete All Lamp Module Address
-    //            sqlQuery = "UPDATE dt_LampModuleAddMst SET rack_det_id = NULL, rack_loc = NULL WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND rack_det_id LIKE '" + strRackName + "^%'";
-    //            Boolean blDelLmAdd = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //            //Delete All Part Rack Loc
-    //            sqlQuery = "UPDATE ais_PartsNum SET rack_det_id = NULL, rack_loc = NULL WHERE rack_det_id LIKE '" + strRackName + "^%'";
-    //            Boolean blDelPartsNum = ConnQuery.ExecuteQuery(sqlQuery);
-    //        }
-    //    }
-
-    //    //Delete All Rack
-    //    sqlQuery = "DELETE FROM dt_RackMst WHERE proc_name = '" + strProcName + "' AND group_name = '" + strGroupName + "' AND block_name = '" + strBlockName + "' AND plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'";
-    //    Boolean blDelRack = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Delete All Block Conversion
-    //    sqlQuery = "UPDATE conv_BlockMst SET group_id = NULL, block_seq = NULL, block_name = NULL WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND block_name = '" + strBlockName + "' AND gw_no = '" + strGwNo + "'";
-    //    Boolean blUpdBlockConv = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Delete All Ins Code Map Conversion
-    //    sqlQuery = "UPDATE conv_InsCodeMap SET [" + strGwNo + "] = NULL WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'";
-    //    Boolean blClrInsCodeMapConv = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Delete All Lamp Module Address Matching Conversion
-    //    sqlQuery = "DELETE FROM conv_LampModuleAddMatching WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND gw_no = '" + strGwNo + "'";
-    //    Boolean blClrLmAddMatchConv = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Delete All Lamp Module Mode
-    //    sqlQuery = "UPDATE conv_LampModuleMode SET mode_data = NULL WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND gw_no = '" + strGwNo + "'";
-    //    Boolean blClrLmModeConv = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Delete All Lamp Module Mode Rack
-    //    sqlQuery = "DELETE FROM conv_LampModuleModeRack WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND gw_no = '" + strGwNo + "'";
-    //    Boolean blClrLmModeRackConv = ConnQuery.ExecuteQuery(sqlQuery);
-    //}
     #endregion
 
     #region Rack Master
@@ -2758,7 +2355,6 @@ public class csDatabase
             filterCriteria = filterCriteria + " AND a.block_name = '" + strBlockName + "'";
         }
 
-        //String sqlQuery = "SELECT a.*, b.* FROM dt_RackMst a INNER JOIN dt_RackMstDet b ON a.plc_no=b.plc_no  WHERE a.rack_name != '' " + filterCriteria + " ORDER BY a.proc_name, a.group_name, a.block_name, a.rack_name, a.plc_no, a.col_cnt, a.row_cnt ";
         String sqlQuery = "SELECT a.*, b.* FROM dt_RackMst a INNER JOIN dt_RackMstDet b ON  A.proc_name=B.proc_name AND A.rack_name=B.rack_name AND A.plc_no=b.plc_no  WHERE a.rack_name != '' " + filterCriteria + " ORDER BY a.proc_name, a.group_name, a.block_name, a.rack_name, a.plc_no, a.col_cnt, a.row_cnt ";
 
         try
@@ -2834,31 +2430,6 @@ public class csDatabase
         }
     }
 
-    //public static Boolean DelRackMstDetAll(String strRackName, String strPlcNo, String strProcName)
-    //{
-    //    String sqlQuery = "";
-
-    //    //Delete All Lamp Module Address
-    //    sqlQuery = "UPDATE dt_LampModuleAddMst SET rack_det_id = NULL, rack_loc = NULL WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND rack_det_id LIKE '" + strRackName + "^%'";
-    //    Boolean blDelLmAdd = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    //Delete All Part Rack Loc
-    //    sqlQuery = "UPDATE ais_PartsNum SET rack_det_id = NULL, rack_loc = NULL WHERE rack_det_id LIKE '" + strRackName + "^%'";
-    //    Boolean blDelPartsNum = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    sqlQuery = "DELETE FROM dt_RackMstDet WHERE rack_name = '" + strRackName + "' AND plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'";
-    //    try
-    //    {
-    //        return ConnQuery.ExecuteQuery(sqlQuery);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        GlobalFunc.Log(ex);
-    //        GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
-    //        return false;
-    //    }
-    //}
-
     public static Boolean SvRackMst(String strRackName, String strColCnt, String strRowCnt, String strPlcNo, String strProcName, String strGroupName, String strBlockName, String strCurUser)
     {
         strRackName = strRackName.Replace("'", "''");
@@ -2898,7 +2469,6 @@ public class csDatabase
 
         sqlQuery.Add("UPDATE dt_LampModuleAddMst SET rack_det_id = REPLACE(rack_det_id, '" + strTmpRackName + "', '" + strRackName + "') where rack_det_id LIKE '" + strTmpRackName + "^%' AND plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'");
 
-        //sqlQuery.Add("UPDATE dt_RackMstDet SET rack_det_id = REPLACE(rack_det_id, '" + strTmpRackName + "', '" + strRackName + "'), rack_name = '" + strRackName + "' where rack_name = '" + strTmpRackName + "'");  //***ace_20160416_001
         sqlQuery.Add("UPDATE dt_RackMstDet SET rack_det_id = REPLACE(rack_det_id, '" + strTmpRackName + "', '" + strRackName + "'), rack_name = '" + strRackName + "', last_upd_by = '" + strCurUser + "', last_upd_dt = CURRENT_TIMESTAMP WHERE rack_name = '" + strTmpRackName + "'");
         try
         {
@@ -2911,30 +2481,6 @@ public class csDatabase
             return false;
         }
     }
-
-    //public static Boolean UpdRackDetAll(String strRackName, String strTmpRackName, String strPlcNo, String strProcName)
-    //{
-    //    strRackName = strRackName.Replace("'", "''");
-    //    strTmpRackName = strTmpRackName.Replace("'", "''");
-
-    //    String sqlQuery = "UPDATE ais_PartsNum SET rack_det_id = REPLACE(rack_det_id, '" + strTmpRackName + "', '" + strRackName + "') where rack_det_id LIKE '" + strTmpRackName + "^%'";
-    //    Boolean blUpdPartsNum = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    sqlQuery = "UPDATE dt_LampModuleAddMst SET rack_det_id = REPLACE(rack_det_id, '" + strTmpRackName + "', '" + strRackName + "') where rack_det_id LIKE '" + strTmpRackName + "^%' AND plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'";
-    //    Boolean blUpdLmAdd = ConnQuery.ExecuteQuery(sqlQuery);
-
-    //    sqlQuery = "UPDATE dt_RackMstDet SET rack_det_id = REPLACE(rack_det_id, '" + strTmpRackName + "', '" + strRackName + "'), rack_name = '" + strRackName + "' where rack_name = '" + strTmpRackName + "'";
-    //    try
-    //    {
-    //        return ConnQuery.ExecuteQuery(sqlQuery);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        GlobalFunc.Log(ex);
-    //        GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
-    //        return false;
-    //    }
-    //}
 
     public static Boolean ChkDuplicateRackName(String strRackName, String strCurRackName)
     {
@@ -3014,41 +2560,43 @@ public class csDatabase
 
     #region Rack Master Detail
 
-    public static DataSet SrcRackMstDet(String strRackName, String strProcName, String strGroupName, String strBlockName)
-    {
-        String filterCriteria = "";
+    //public static DataSet SrcRackMstDet(String strRackName, String strProcName, String strGroupName, String strBlockName)
+    //{
+    //    String filterCriteria = "";
 
-        if (strRackName != "")
-        {
-            filterCriteria = filterCriteria + " AND rack_name = '" + strRackName + "'";
-        }
-        if (strProcName != "")
-        {
-            filterCriteria = filterCriteria + " AND proc_name = '" + strProcName + "'";
-        }
-        if (strGroupName != "")
-        {
-            filterCriteria = filterCriteria + " AND group_name= '" + strGroupName + "'";
-        }
-        if (strBlockName != "")
-        {
-            filterCriteria = filterCriteria + " AND block_name = '" + strBlockName + "'";
-        }
+    //    if (strRackName != "")
+    //    {
+    //        filterCriteria = filterCriteria + " AND rack_name = '" + strRackName + "'";
+    //    }
+    //    if (strProcName != "")
+    //    {
+    //        filterCriteria = filterCriteria + " AND proc_name = '" + strProcName + "'";
+    //    }
+    //    if (strGroupName != "")
+    //    {
+    //        filterCriteria = filterCriteria + " AND group_name= '" + strGroupName + "'";
+    //    }
+    //    if (strBlockName != "")
+    //    {
+    //        filterCriteria = filterCriteria + " AND block_name = '" + strBlockName + "'";
+    //    }
 
-        String sqlQuery = "SELECT * FROM dt_RackMstDet WHERE rack_name != '' " + filterCriteria + " ORDER BY proc_name, group_name, block_name, rack_name, hj_row, hj_col";
+    //    String sqlQuery = "SELECT * FROM dt_RackMstDet WHERE rack_name != '' " + filterCriteria + " ORDER BY proc_name, group_name, block_name, rack_name, hj_row, hj_col";
 
-        try
-        {
-            return ConnQuery.getBindingDatasetData(sqlQuery);
-        }
-        catch (Exception ex)
-        {
-            GlobalFunc.Log(ex);
-            GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
-            return null;
-        }
-    }
+    //    try
+    //    {
+    //        return ConnQuery.getBindingDatasetData(sqlQuery);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        GlobalFunc.Log(ex);
+    //        GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
+    //        return null;
+    //    }
+    //}
 
+
+    //ENHANCEMENT NEEDED
     public static Boolean ChkRackMstDetExist(String strRackMstDetId)
     {
         strRackMstDetId = strRackMstDetId.Replace("'", "''");
@@ -3103,6 +2651,7 @@ public class csDatabase
         }
     }
 
+    //not using in #3-UAT
     public static String GetAisRackLoc(String strHjId, String strHjItemId, String strHjRow, String strHjCol, String strPartsNo, String strColorSfx)
     {
         strHjId = strHjId.Replace("'", "''");
@@ -3125,6 +2674,12 @@ public class csDatabase
         }
     }
 
+    //ENHANCEMENT NEEDED - since the ais_PartsNum will add 2 more column to store other line of rack_det_id and rack_loc, need to determine which rack to get.
+    //then use the rack_det_id , split them with the delimiter ^ to get the rack name 
+    //then use the rack name to filter in dt_RackMst to know which group_name it is 
+    //then we know which rack_det_id and rack_loc to return.
+    //need to pass in one more data so that it can determine which rack_loc
+    //check the group_line with group_name, not gorup_name itself.
     public static String GetPartsRackLoc(String strPartsNo, String strColorSfx)
     {
         strPartsNo = strPartsNo.Replace("'", "''");
@@ -3235,59 +2790,65 @@ public class csDatabase
         }
     }
 
-    public static Boolean SvRackDetAis(String strRackMstDetId, String strHjId, String strHjItemId, String strHjRow, String strHjCol, String strPartsTitle, String strPartsNo, String strColorSfx, String strPartsNumSymbolCode, String strPartsNumSymbolRtf, String strRackName, String strPlcNo, String strProcName)
-    {
-        strRackMstDetId = strRackMstDetId.Replace("'", "''");
-        strHjId = strHjId.Replace("'", "''");
-        strHjItemId = strHjItemId.Replace("'", "''");
-        strHjRow = strHjRow.Replace("'", "''");
-        strHjCol = strHjCol.Replace("'", "''");
-        strPartsTitle = strPartsTitle.Replace("'", "''");
-        strPartsNo = strPartsNo.Replace("'", "''");
-        strColorSfx = strColorSfx.Replace("'", "''");
-        strPartsNumSymbolCode = strPartsNumSymbolCode.Replace("'", "''");
-        strPartsNumSymbolRtf = strPartsNumSymbolRtf.Replace("'", "''");
+    //not using in #3.
 
-        String sqlQuery = "INSERT INTO dt_RackMstDet (rack_det_id, hj_id, hj_item_id, hj_row, hj_col, parts_title, parts_no, color_sfx, symbol_code, symbol_rtf, rack_name, plc_no, proc_name) VALUES ('" + strRackMstDetId + "', '" + strHjId + "','" + strHjItemId + "','" + strHjRow + "','" + strHjCol + "','" + strPartsTitle + "','" + strPartsNo + "','" + strColorSfx + "','" + strPartsNumSymbolCode + "','" + strPartsNumSymbolRtf + "','" + strRackName + "','" + strPlcNo + "','" + strProcName + "')";
-        try
-        {
-            return ConnQuery.ExecuteQuery(sqlQuery);
-        }
-        catch (Exception ex)
-        {
-            GlobalFunc.Log(ex);
-            GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
-            return false;
-        }
-    }
+    //public static Boolean SvRackDetAis(String strRackMstDetId, String strHjId, String strHjItemId, String strHjRow, String strHjCol, String strPartsTitle, String strPartsNo, String strColorSfx, String strPartsNumSymbolCode, String strPartsNumSymbolRtf, String strRackName, String strPlcNo, String strProcName)
+    //{
+    //    strRackMstDetId = strRackMstDetId.Replace("'", "''");
+    //    strHjId = strHjId.Replace("'", "''");
+    //    strHjItemId = strHjItemId.Replace("'", "''");
+    //    strHjRow = strHjRow.Replace("'", "''");
+    //    strHjCol = strHjCol.Replace("'", "''");
+    //    strPartsTitle = strPartsTitle.Replace("'", "''");
+    //    strPartsNo = strPartsNo.Replace("'", "''");
+    //    strColorSfx = strColorSfx.Replace("'", "''");
+    //    strPartsNumSymbolCode = strPartsNumSymbolCode.Replace("'", "''");
+    //    strPartsNumSymbolRtf = strPartsNumSymbolRtf.Replace("'", "''");
 
-    public static Boolean UpdRackDetAis(String strRackMstDetId, String strHjId, String strHjItemId, String strHjRow, String strHjCol, String strPartsTitle, String strPartsNo, String strColorSfx, String strPartsNumSymbolCode, String strPartsNumSymbolRtf, String strRackName, String strPlcNo, String strProcName, String strCurUser)  //***ace_20160416_001
-    {
-        strRackMstDetId = strRackMstDetId.Replace("'", "''");
-        strHjId = strHjId.Replace("'", "''");
-        strHjItemId = strHjItemId.Replace("'", "''");
-        strHjRow = strHjRow.Replace("'", "''");
-        strHjCol = strHjCol.Replace("'", "''");
-        strPartsTitle = strPartsTitle.Replace("'", "''");
-        strPartsNo = strPartsNo.Replace("'", "''");
-        strColorSfx = strColorSfx.Replace("'", "''");
-        strPartsNumSymbolCode = strPartsNumSymbolCode.Replace("'", "''");
-        strPartsNumSymbolRtf = strPartsNumSymbolRtf.Replace("'", "''");
+    //    String sqlQuery = "INSERT INTO dt_RackMstDet (rack_det_id, hj_id, hj_item_id, hj_row, hj_col, parts_title, parts_no, color_sfx, symbol_code, symbol_rtf, rack_name, plc_no, proc_name) VALUES ('" + strRackMstDetId + "', '" + strHjId + "','" + strHjItemId + "','" + strHjRow + "','" + strHjCol + "','" + strPartsTitle + "','" + strPartsNo + "','" + strColorSfx + "','" + strPartsNumSymbolCode + "','" + strPartsNumSymbolRtf + "','" + strRackName + "','" + strPlcNo + "','" + strProcName + "')";
+    //    try
+    //    {
+    //        return ConnQuery.ExecuteQuery(sqlQuery);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        GlobalFunc.Log(ex);
+    //        GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
+    //        return false;
+    //    }
+    //}
 
-        //String sqlQuery = "UPDATE dt_RackMstDet SET hj_id = '" + strHjId + "', hj_item_id = '" + strHjItemId + "', hj_row = '" + strHjRow + "', hj_col = '" + strHjCol + "', parts_title = '" + strPartsTitle + "', parts_no = '" + strPartsNo + "', color_sfx = '" + strColorSfx + "', symbol_code = '" + strPartsNumSymbolCode + "', symbol_rtf = '" + strPartsNumSymbolRtf + "', rack_name = '" + strRackName + "', plc_no = '" + strPlcNo + "', proc_name= '" + strProcName + "' WHERE rack_det_id = '" + strRackMstDetId + "'";  //***ace_20160416_001
-        String sqlQuery = "UPDATE dt_RackMstDet SET hj_id = '" + strHjId + "', hj_item_id = '" + strHjItemId + "', hj_row = '" + strHjRow + "', hj_col = '" + strHjCol + "', parts_title = '" + strPartsTitle + "', parts_no = '" + strPartsNo + "', color_sfx = '" + strColorSfx + "', symbol_code = '" + strPartsNumSymbolCode + "', symbol_rtf = '" + strPartsNumSymbolRtf + "', rack_name = '" + strRackName + "', plc_no = '" + strPlcNo + "', proc_name= '" + strProcName + "', last_upd_by = '" + strCurUser + "', last_upd_dt = CURRENT_TIMESTAMP WHERE rack_det_id = '" + strRackMstDetId + "'";
-        try
-        {
-            return ConnQuery.ExecuteQuery(sqlQuery);
-        }
-        catch (Exception ex)
-        {
-            GlobalFunc.Log(ex);
-            GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
-            return false;
-        }
-    }
+    //not using in #3
 
+    //public static Boolean UpdRackDetAis(String strRackMstDetId, String strHjId, String strHjItemId, String strHjRow, String strHjCol, String strPartsTitle, String strPartsNo, String strColorSfx, String strPartsNumSymbolCode, String strPartsNumSymbolRtf, String strRackName, String strPlcNo, String strProcName, String strCurUser)  //***ace_20160416_001
+    //{
+    //    strRackMstDetId = strRackMstDetId.Replace("'", "''");
+    //    strHjId = strHjId.Replace("'", "''");
+    //    strHjItemId = strHjItemId.Replace("'", "''");
+    //    strHjRow = strHjRow.Replace("'", "''");
+    //    strHjCol = strHjCol.Replace("'", "''");
+    //    strPartsTitle = strPartsTitle.Replace("'", "''");
+    //    strPartsNo = strPartsNo.Replace("'", "''");
+    //    strColorSfx = strColorSfx.Replace("'", "''");
+    //    strPartsNumSymbolCode = strPartsNumSymbolCode.Replace("'", "''");
+    //    strPartsNumSymbolRtf = strPartsNumSymbolRtf.Replace("'", "''");
+
+    //    //String sqlQuery = "UPDATE dt_RackMstDet SET hj_id = '" + strHjId + "', hj_item_id = '" + strHjItemId + "', hj_row = '" + strHjRow + "', hj_col = '" + strHjCol + "', parts_title = '" + strPartsTitle + "', parts_no = '" + strPartsNo + "', color_sfx = '" + strColorSfx + "', symbol_code = '" + strPartsNumSymbolCode + "', symbol_rtf = '" + strPartsNumSymbolRtf + "', rack_name = '" + strRackName + "', plc_no = '" + strPlcNo + "', proc_name= '" + strProcName + "' WHERE rack_det_id = '" + strRackMstDetId + "'";  //***ace_20160416_001
+    //    String sqlQuery = "UPDATE dt_RackMstDet SET hj_id = '" + strHjId + "', hj_item_id = '" + strHjItemId + "', hj_row = '" + strHjRow + "', hj_col = '" + strHjCol + "', parts_title = '" + strPartsTitle + "', parts_no = '" + strPartsNo + "', color_sfx = '" + strColorSfx + "', symbol_code = '" + strPartsNumSymbolCode + "', symbol_rtf = '" + strPartsNumSymbolRtf + "', rack_name = '" + strRackName + "', plc_no = '" + strPlcNo + "', proc_name= '" + strProcName + "', last_upd_by = '" + strCurUser + "', last_upd_dt = CURRENT_TIMESTAMP WHERE rack_det_id = '" + strRackMstDetId + "'";
+    //    try
+    //    {
+    //        return ConnQuery.ExecuteQuery(sqlQuery);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        GlobalFunc.Log(ex);
+    //        GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
+    //        return false;
+    //    }
+    //}
+
+
+    //ENHANCEMENT NEEDED
     public static Boolean UpdPartsLoc(String strPartsNo, String strColorSfx, String strRackMstDetId, String strRackLoc)
     {
         String sqlQuery = "";
@@ -3358,7 +2919,6 @@ public class csDatabase
 
     public static Boolean DelRackMstDetModule(String strRackMstDetId, String strCurUser)  //***ace_20160416_001
     {
-        //String sqlQuery = "UPDATE dt_RackMstDet SET module_add = NULL, module_name = NULL WHERE rack_det_id = '" + strRackMstDetId + "'";  //***ace_20160416_001
         String sqlQuery = "UPDATE dt_RackMstDet SET module_add = NULL, module_name = NULL, last_upd_by = '" + strCurUser + "', last_upd_dt = CURRENT_TIMESTAMP WHERE rack_det_id = '" + strRackMstDetId + "'";
 
         try
@@ -3380,7 +2940,6 @@ public class csDatabase
         strModuleAdd = strModuleAdd.Replace("'", "''");
         strModuleName = strModuleName.Replace("'", "''");
 
-        //String sqlQuery = "UPDATE dt_RackMstDet SET rack_name = '" + strRackName + "', module_add = '" + strModuleAdd + "', module_name = '" + strModuleName + "' WHERE rack_det_id = '" + strRackMstDetId + "'";  //***ace_20160416_001
         String sqlQuery = "UPDATE dt_RackMstDet SET rack_name = '" + strRackName + "', module_add = '" + strModuleAdd + "', module_name = '" + strModuleName + "', last_upd_by = '" + strCurUser + "', last_upd_dt = CURRENT_TIMESTAMP WHERE rack_det_id = '" + strRackMstDetId + "'";
         try
         {
@@ -3412,6 +2971,7 @@ public class csDatabase
         return ConnQuery.getReturnFieldExecuteReader(sqlQuery);
     }
 
+    //ENHANCEMENT NEEDED
     public static String UpdLampModuleLoc(String strProcName, String strModuleAdd, String strModuleName, String strRackMstDetId, String strRackLoc)
     {
         String sqlQuery = "";
@@ -3493,10 +3053,6 @@ public class csDatabase
 
     public static DataSet GetRackMstDetModule(String strRackMstDetId)
     {
-        //***ace_20160419_001
-        //String sqlQuery = "SELECT (RackDet.module_add + ' - ' + LmAdd.module_type) as module_add, RackDet.module_name, LmType.color_di FROM PGMDPS.dbo.dt_RackMstDet RackDet, PGMDPS.dbo.dt_LampModuleAddMst LmAdd, PGMDPS.dbo.dt_LampModuleTypeMst LmType WHERE RackDet.rack_det_id = '" + strRackMstDetId + "' AND LmAdd.module_add = RackDet.module_add AND LmAdd.module_type = LmType.module_type";
-        //Modify WFKHOR 21-10-2020
-        //String sqlQuery = "SELECT (RackDet.module_add + ' - ' + LmAdd.module_type) as module_add, RackDet.module_name, LmType.color_di, LmAdd.proc_name FROM dbo.dt_RackMstDet RackDet, dbo.dt_LampModuleAddMst LmAdd, dbo.dt_LampModuleTypeMst LmType WHERE RackDet.rack_det_id = '" + strRackMstDetId + "' AND LmAdd.module_add = RackDet.module_add AND LmAdd.module_type = LmType.module_type";
         String sqlQuery = "SELECT (RackDet.module_add + ' - ' + LmAdd.module_type + ' (' + LTRIM(RTRIM(STR(ISNULL(PhyAdd.physical_add,RackDet.module_add)))) + ')' ) as module_add, RackDet.module_name, LmType.color_di, LmAdd.proc_name FROM dbo.dt_RackMstDet RackDet INNER JOIN dbo.dt_LampModuleAddMst LmAdd ON LmAdd.module_add = RackDet.module_add AND LmAdd.proc_name = RackDet.proc_name INNER JOIN dbo.dt_LampModuleTypeMst LmType ON LmAdd.module_type = LmType.module_type LEFT JOIN dbo.dt_PhysicalAddMst PhyAdd ON RackDet.module_add = PhyAdd.module_add AND RackDet.proc_name = PhyAdd.proc_name WHERE RackDet.rack_det_id = '" + strRackMstDetId + "' ";
         try
         {
@@ -3606,7 +3162,6 @@ public class csDatabase
 
     public static DataSet SrcLmAddPerBlock(String strPlcNo, String strProcName, String strBlockName)
     {
-        //String sqlQuery = "SELECT LmAdd.*, LmType.* from dt_LampModuleAddMst LmAdd, dt_LampModuleTypeMst LmType, dt_RackMst RackMst, dt_RackMstDet RackMstDet WHERE LmAdd.rack_det_id != '' AND LmAdd.plc_no = '" + strPlcNo + "' AND LmAdd.proc_name = '" + strProcName + "' AND RackMst.block_name = '" + strBlockName + "' AND LmAdd.proc_name = RackMst.proc_name AND LmAdd.rack_det_id = RackMstDet.rack_det_id AND RackMst.rack_name = RackMstDet.rack_name AND LmAdd.module_type = LmType.module_type ORDER BY LmAdd.rack_loc";
         String sqlQuery = "SELECT LmAdd.*, LmType.* , LTRIM(RTRIM(STR(ISNULL(PhyAdd.physical_add,LmAdd.module_add)))) AS PhyAdd, CONVERT(INT, LTRIM(RTRIM(STR(ISNULL(PhyAdd.physical_add,LmAdd.module_add))))) AS PhyAddOrder FROM dt_LampModuleAddMst LmAdd INNER JOIN dt_LampModuleTypeMst LmType ON LmAdd.module_type = LmType.module_type INNER JOIN dt_RackMst RackMst ON LmAdd.proc_name = RackMst.proc_name  INNER JOIN dt_RackMstDet RackMstDet ON LmAdd.rack_det_id = RackMstDet.rack_det_id AND  RackMst.rack_name = RackMstDet.rack_name LEFT JOIN dt_PhysicalAddMst PhyAdd ON LmAdd.proc_name = PhyAdd.proc_name AND LmAdd.module_add = PhyAdd.module_add WHERE LmAdd.rack_det_id != '' AND LmAdd.plc_no = '" + strPlcNo + "' AND LmAdd.proc_name = '" + strProcName + "' AND RackMst.block_name = '" + strBlockName + "' ORDER BY PhyAddOrder";
         try
         {
@@ -3622,9 +3177,6 @@ public class csDatabase
 
     public static DataSet GetLmAddPerBlock(String strPlcNo, String strProcName, String strGroupName, String strBlockName, String strInsCode)
     {
-        //***ace_20160419_001
-        //String sqlQuery = "SELECT DISTINCT RackMstDet.module_add, InsCode.ins_code, BlockMst.gw_no FROM dt_DpsInsCodeMst InsCode, PGMDPS.dbo.dt_BlockMst BlockMst, dt_RackMst RackMst, dt_RackMstDet RackMstDet, ais_DataHJ DataHj WHERE RackMst.proc_name = '" + strProcName + "' AND RackMst.group_name = '" + strGroupName + "' AND RackMst.block_name = '" + strBlockName + "' AND RackMst.block_name = BlockMst.block_name AND RackMstDet.module_add IS NOT NULL AND RackMst.rack_name = RackMstDet.rack_name AND InsCode.model = DataHj.model AND InsCode.sfx = DataHj.sfx AND (InsCode.color = DataHj.color OR DataHj.color = '*') AND RackMstDet.parts_no = DataHj.part_no AND RackMstDet.color_sfx = DataHj.color_sfx";
-        //String sqlQuery = "SELECT DISTINCT RackMstDet.module_add, InsCode.ins_code, BlockMst.gw_no FROM dt_DpsInsCodeMst InsCode, dbo.dt_BlockMst BlockMst, dt_RackMst RackMst, dt_RackMstDet RackMstDet, ais_DataHJ DataHj WHERE RackMst.proc_name = '" + strProcName + "' AND RackMst.group_name = '" + strGroupName + "' AND RackMst.block_name = '" + strBlockName + "' AND RackMst.block_name = BlockMst.block_name AND RackMstDet.module_add IS NOT NULL AND RackMst.rack_name = RackMstDet.rack_name AND InsCode.model = DataHj.model AND InsCode.sfx = DataHj.sfx AND (InsCode.color = DataHj.color OR DataHj.color = '*') AND RackMstDet.parts_no = DataHj.part_no AND RackMstDet.color_sfx = DataHj.color_sfx";
         String sqlQuery = "SELECT A.*, LTRIM(RTRIM(STR(ISNULL(B.physical_add, A.module_add)))) AS PhyAdd  FROM (SELECT DISTINCT RackMstDet.module_add, InsCode.ins_code, BlockMst.gw_no FROM dt_DpsInsCodeMst InsCode, dbo.dt_BlockMst BlockMst, dt_RackMst RackMst, dt_RackMstDet RackMstDet, ais_DataHJ DataHj WHERE RackMst.proc_name = '" + strProcName + "' AND RackMst.group_name = '" + strGroupName + "' AND RackMst.block_name = '" + strBlockName + "' AND RackMst.block_name = BlockMst.block_name AND RackMstDet.module_add IS NOT NULL AND RackMst.rack_name = RackMstDet.rack_name AND InsCode.model = DataHj.model AND InsCode.sfx = DataHj.sfx AND (InsCode.color = DataHj.color OR DataHj.color = '*') AND RackMstDet.parts_no = DataHj.part_no AND RackMstDet.color_sfx = DataHj.color_sfx ";
         if (strInsCode != "")
         {
@@ -4492,27 +4044,6 @@ public class csDatabase
             return "";
         }
     }
-
-    //public static String GetPartsRackLocExport(String strPartsNo, String strColorSfx, string Rackname)
-    //{
-
-
-    //    // to make sure the part no and color is not exist in 
-    //    strPartsNo = strPartsNo.Replace("'", "''");
-    //    strColorSfx = strColorSfx.Replace("'", "''");
-
-    //    String sqlQuery = "SELECT rack_loc AS ReturnField FROM ais_PartsNum WHERE part_no = '" + strPartsNo + "' AND color_sfx = '" + strColorSfx + "' AND substring(rack_det_id,1, CHARINDEX('^',rack_det_id)-1)  != '" + Rackname + "'";
-    //    try
-    //    {
-    //        return ConnQuery.getReturnFieldExecuteReader(sqlQuery);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        GlobalFunc.Log(ex);
-    //        GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
-    //        return "";
-    //    }
-    //}
 
     public static String getSinglefield(String strFileName, string dictname, string strsearchvalue, string dictname2, string strsearchvalue2, string returnvalue)
     {
