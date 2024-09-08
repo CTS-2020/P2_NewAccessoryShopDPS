@@ -231,6 +231,7 @@ public partial class PlcConvResult : System.Web.UI.Page
                             String strModuleAdd = "";
                             String strPartName = "";
                             String strPartNumber = "";
+                            //ENHANCEMENT NEEDED? rack_det_id get  FROM dt_RackMst a INNER JOIN dt_RackMstDet 
                             strModDet = getModDetString(row["rack_det_id"].ToString());
 
                             String[] tmpModVal = strModDet.Split('~');
@@ -240,6 +241,7 @@ public partial class PlcConvResult : System.Web.UI.Page
                                 strModuleAdd = tmpModVal[0];
                             }
 
+                            //ENHANCEMENT NEEDED? rack_det_id get  FROM dt_RackMst a INNER JOIN dt_RackMstDet
                             strAisDet = getAisDetString(row["rack_det_id"].ToString());
 
                             String[] tmpAisVal = strAisDet.Split('~');
@@ -250,6 +252,7 @@ public partial class PlcConvResult : System.Web.UI.Page
                                 strPartNumber = tmpAisVal[5] + " - " + tmpAisVal[6];
                             }
 
+                            //ENHANCEMENT NEEDED? rack_det_id get  FROM dt_RackMst a INNER JOIN dt_RackMstDet
                             int celRow = Convert.ToInt32(row["rack_det_id"].ToString().Split('^')[1]);
                             int celCol = Convert.ToInt32(row["rack_det_id"].ToString().Split('^')[2]);
 

@@ -47,12 +47,12 @@ public class ConnQuery
         transaction1 = sqlConn.BeginTransaction();
         try
         {
-           
+
             sqlCommand.Connection = sqlConn;
             sqlAdapter.SelectCommand = sqlCommand;
             transaction1.Commit();
             sqlAdapter.Fill(DsResult);
-            
+
             return DsResult;
         }
         catch (Exception ex)
@@ -221,7 +221,7 @@ public class ConnQuery
         transaction1 = sqlConn.BeginTransaction();
         try
         {
-           
+
             sqlCommand = new SqlCommand(sqlQuery, sqlConn);
             transaction1.Commit();
             if (sqlCommand.ExecuteNonQuery() >= 1)
@@ -232,7 +232,7 @@ public class ConnQuery
             {
                 ExecuteResult = false;
             }
-            
+
             sqlConn.Close();
             return ExecuteResult;
         }
@@ -257,35 +257,64 @@ public class ConnQuery
 
         return ExecuteResult;
     }
-    
+
+    public static string SqlCommandToString(SqlCommand command)
+    {
+        // Start with the CommandText (the SQL query or command)
+        string query = command.CommandText;
+
+        // Iterate over the parameters and replace their placeholders in the query
+        foreach (SqlParameter param in command.Parameters)
+        {
+            string paramValue = param.Value != null ? param.Value.ToString() : "NULL";
+
+            // Depending on the type of parameter, add quotes for string types or leave as is for numbers
+            if (param.SqlDbType == SqlDbType.VarChar || param.SqlDbType == SqlDbType.NVarChar || param.SqlDbType == SqlDbType.Char || param.SqlDbType == SqlDbType.Text)
+            {
+                paramValue = String.Format("'{0}'", paramValue); // Use String.Format for string types
+            }
+
+            // Replace the parameter name with its actual value in the query
+            query = query.Replace(param.ParameterName, paramValue);
+        }
+
+        return query;
+    }
+
+
     public static Boolean ExecuteTransSaveQuery(List<String> sqlQuery)
     {
         SqlConnection sqlConnDps = null;
         SqlCommand sqlCmd = null;
         SqlTransaction sqlTransDps = null;
         Boolean ExecuteResult = false;
-
+        GlobalFunc.Log("can run ExecuteTransSaveQuery");
         try
         {
+            GlobalFunc.Log("can run ExecuteTransSaveQuery, in try block");
             sqlConnDps = ConnectToSql();
             sqlTransDps = sqlConnDps.BeginTransaction();
-
+            GlobalFunc.Log("after connection.");
             foreach (String element in sqlQuery)
             {
+                GlobalFunc.Log("in looping");
                 sqlCmd = null;
                 sqlCmd = new SqlCommand(element, sqlConnDps, sqlTransDps);
-
+                GlobalFunc.Log("sqlCmd: " + SqlCommandToString(sqlCmd));
                 if (sqlCmd.ExecuteNonQuery() >= 1)
                 {
+                    GlobalFunc.Log("execute successfully");
                     ExecuteResult = true;
-                    GlobalFunc.Log(element);         
+                    GlobalFunc.Log(element);
                 }
                 else
                 {
                     try
                     {
+                        GlobalFunc.Log("execute failed and rollback.");
                         ExecuteResult = false;
                         sqlTransDps.Rollback();
+                        GlobalFunc.Log("after rollback.");
                     }
                     catch (Exception ex)
                     {
@@ -293,14 +322,16 @@ public class ConnQuery
                         GlobalFunc.ShowErrorMessage(Convert.ToString("Database timeout. Records not able to update"));
                         break;
                     }
-  
- 
+
+
                 }
             }
 
             if (ExecuteResult == true)
             {
+                GlobalFunc.Log("try to commit");
                 sqlTransDps.Commit();
+                GlobalFunc.Log("committed");
             }
 
             sqlConnDps.Close();
@@ -335,8 +366,8 @@ public class ConnQuery
         SqlCommand sqlCmd = null;
         SqlTransaction sqlTransDps = null;
         Boolean ExecuteResult = false;
-        
-        
+
+
         try
         {
             sqlConnDps = ConnectToSql();
@@ -361,19 +392,19 @@ public class ConnQuery
             {
                 sqlTransDps.Rollback();
             }
-            
+
             sqlConnDps.Close();
 
             return ExecuteResult;
         }
         catch (Exception ex)
         {
-           
+
             GlobalFunc.Log(ex);
             ExecuteResult = false;
             //if (sqlTransDps != null) sqlTransDps.Rollback();
-		//modify by ng 21/07/2016
-		sqlTransDps.Rollback();
+            //modify by ng 21/07/2016
+            sqlTransDps.Rollback();
         }
         finally
         {

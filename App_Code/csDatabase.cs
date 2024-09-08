@@ -711,7 +711,7 @@ public class csDatabase
         }
     }
 
-    //ENHANCEMENT NEEDED
+    //ENHANCEMENT NEEDED-DONE
     public static Boolean DelPlcMst(String strPlcNo, String strProcName)
     {
         List<String> sqlQuery = new List<String>();
@@ -744,8 +744,12 @@ public class csDatabase
                 //Delete All Rack Detail
                 sqlQuery.Add("DELETE FROM dt_RackMstDet WHERE rack_name = '" + strRackName + "' AND plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'");
 
+                string GroupLine = GetGroupLineByRackName(strRackName, strPlcNo);
+                string rackLoc = GroupLine == "1" ? "rack_loc" : "rack_loc_2";
+                string rackDetID = GroupLine == "1" ? "rack_det_id" : "rack_det_id_2";
                 //Delete All Part Rack Loc
-                sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = NULL, rack_loc = NULL WHERE rack_det_id LIKE '" + strRackName + "^%'");
+                //sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = NULL, rack_loc = NULL WHERE rack_det_id LIKE '" + strRackName + "^%'");
+                sqlQuery.Add(string.Format("UPDATE ais_PartsNum SET {0} = NULL, {1} = NULL WHERE {0} LIKE '{2}^%'", rackDetID, rackLoc, strRackName));
             }
         }
 
@@ -1828,7 +1832,7 @@ public class csDatabase
         }
     }
 
-    //ENHANCEMENT NEEDED
+    //ENHANCEMENT NEEDED -DONE
     public static Boolean DelGroupMst(String strGroupID, String strPlcNo, String strProcName, String strGroupName, String strGroupLine)
     {
 
@@ -1859,13 +1863,17 @@ public class csDatabase
 
                 sqlQuery.Add("DELETE FROM dt_RackMstDet WHERE rack_name = '" + strRackName + "' AND plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'");
 
-                //ENHANCEMENT NEEDED
+                //ENHANCEMENT NEEDED? dt_LampModuleAddMst
                 //Delete All Lamp Module Address
                 sqlQuery.Add("UPDATE dt_LampModuleAddMst SET rack_det_id = NULL, rack_loc = NULL WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND rack_det_id LIKE '" + strRackName + "^%'");
 
-                //ENHANCEMENT NEEDED
+                //ENHANCEMENT NEEDED - DONE
                 //Delete All Part Rack Loc
-                sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = NULL, rack_loc = NULL WHERE rack_det_id LIKE '" + strRackName + "^%'");
+                string GroupLine = GetGroupLineByRackName(strRackName, strPlcNo);
+                string rackLoc = GroupLine == "1" ? "rack_loc" : "rack_loc_2";
+                string rackDetID = GroupLine == "1" ? "rack_det_id" : "rack_det_id_2";
+                //sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = NULL, rack_loc = NULL WHERE rack_det_id LIKE '" + strRackName + "^%'");
+                sqlQuery.Add(string.Format("UPDATE ais_PartsNum SET {0} = NULL, {1} = NULL WHERE {0} LIKE '{2}^%'", rackDetID, rackLoc, strRackName));
             }
         }
 
@@ -2151,9 +2159,14 @@ public class csDatabase
                 //Delete All Lamp Module Address
                 sqlQuery.Add("UPDATE dt_LampModuleAddMst SET rack_det_id = NULL, rack_loc = NULL WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND rack_det_id LIKE '" + strRackName + "^%'");
 
-                //ENHANCEMENT NEEDED
+                //ENHANCEMENT NEEDED-DONE
                 //Delete All Part Rack Loc
-                sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = NULL, rack_loc = NULL WHERE rack_det_id LIKE '" + strRackName + "^%'");
+                //sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = NULL, rack_loc = NULL WHERE rack_det_id LIKE '" + strRackName + "^%'");
+                string GroupLine = GetGroupLineByRackName(strRackName, strPlcNo);
+                string rackLoc = GroupLine == "1" ? "rack_loc" : "rack_loc_2";
+                string rackDetID = GroupLine == "1" ? "rack_det_id" : "rack_det_id_2";
+                //sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = NULL, rack_loc = NULL WHERE rack_det_id LIKE '" + strRackName + "^%'");
+                sqlQuery.Add(string.Format("UPDATE ais_PartsNum SET {0} = NULL, {1} = NULL WHERE {0} LIKE '{2}^%'", rackDetID, rackLoc, strRackName));
             }
         }
 
@@ -2414,8 +2427,13 @@ public class csDatabase
         //Delete All Lamp Module Address
         sqlQuery.Add("UPDATE dt_LampModuleAddMst SET rack_det_id = NULL, rack_loc = NULL WHERE plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "' AND rack_det_id LIKE '" + strRackName + "^%'");
 
+        //ENHANCEMENT NEEDED-DONE
         //Delete All Part Rack Loc
-        sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = NULL, rack_loc = NULL WHERE rack_det_id LIKE '" + strRackName + "^%'");
+        string GroupLine = GetGroupLineByRackName(strRackName, strPlcNo);
+        string rackLoc = GroupLine == "1" ? "rack_loc" : "rack_loc_2";
+        string rackDetID = GroupLine == "1" ? "rack_det_id" : "rack_det_id_2";
+        //sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = NULL, rack_loc = NULL WHERE rack_det_id LIKE '" + strRackName + "^%'");
+        sqlQuery.Add(string.Format("UPDATE ais_PartsNum SET {0} = NULL, {1} = NULL WHERE {0} LIKE '{2}^%'", rackDetID, rackLoc, strRackName));
 
         sqlQuery.Add("DELETE FROM dt_RackMstDet WHERE rack_name = '" + strRackName + "' AND plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'");
         try
@@ -2452,6 +2470,7 @@ public class csDatabase
         }
     }
 
+    //ENHANCEMENT NEEDED-DONE
     public static Boolean UpdRackMst(String strRackName, String strColCnt, String strRowCnt, String strPlcNo, String strProcName, String strGroupName, String strBlockName, String strTmpRackName, String strCurUser)
     {
         strRackName = strRackName.Replace("'", "''");
@@ -2465,7 +2484,13 @@ public class csDatabase
 
         sqlQuery.Add("UPDATE dt_RackMst SET rack_name = '" + strRackName + "', col_cnt = '" + strColCnt + "', row_cnt = '" + strRowCnt + "', plc_no = '" + strPlcNo + "', proc_name = '" + strProcName + "', group_name = '" + strGroupName + "', block_name = '" + strBlockName + "', last_upd_by = '" + strCurUser + "', last_upd_dt = CURRENT_TIMESTAMP WHERE rack_name = '" + strTmpRackName + "'");
 
-        sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = REPLACE(rack_det_id, '" + strTmpRackName + "', '" + strRackName + "') where rack_det_id LIKE '" + strTmpRackName + "^%'");
+        //sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = REPLACE(rack_det_id, '" + strTmpRackName + "', '" + strRackName + "') where rack_det_id LIKE '" + strTmpRackName + "^%'");
+        string GroupLine = GetGroupLineByRackName(strRackName, strPlcNo);
+        string rackLoc = GroupLine == "1" ? "rack_loc" : "rack_loc_2";
+        string rackDetID = GroupLine == "1" ? "rack_det_id" : "rack_det_id_2";
+
+        sqlQuery.Add(string.Format("UPDATE ais_PartsNum SET {0} = REPLACE({0}, '{1}', '{2}') WHERE {0} LIKE '{1}^%'", rackDetID, strTmpRackName, strRackName));
+
 
         sqlQuery.Add("UPDATE dt_LampModuleAddMst SET rack_det_id = REPLACE(rack_det_id, '" + strTmpRackName + "', '" + strRackName + "') where rack_det_id LIKE '" + strTmpRackName + "^%' AND plc_no = '" + strPlcNo + "' AND proc_name = '" + strProcName + "'");
 
@@ -2596,7 +2621,7 @@ public class csDatabase
     //}
 
 
-    //ENHANCEMENT NEEDED
+    //ENHANCEMENT NEEDED? dt_RackMstDet
     public static Boolean ChkRackMstDetExist(String strRackMstDetId)
     {
         strRackMstDetId = strRackMstDetId.Replace("'", "''");
@@ -2674,18 +2699,28 @@ public class csDatabase
         }
     }
 
-    //ENHANCEMENT NEEDED - since the ais_PartsNum will add 2 more column to store other line of rack_det_id and rack_loc, need to determine which rack to get.
+    //ENHANCEMENT NEEDED - UPDATED
+    //since the ais_PartsNum will add 2 more column to store other line of rack_det_id and rack_loc, need to determine which rack to get.
     //then use the rack_det_id , split them with the delimiter ^ to get the rack name 
     //then use the rack name to filter in dt_RackMst to know which group_name it is 
     //then we know which rack_det_id and rack_loc to return.
     //need to pass in one more data so that it can determine which rack_loc
     //check the group_line with group_name, not gorup_name itself.
-    public static String GetPartsRackLoc(String strPartsNo, String strColorSfx)
+    public static String GetPartsRackLoc(String strPartsNo, String strColorSfx, String strRackName, String strPlcNo)
     {
         strPartsNo = strPartsNo.Replace("'", "''");
         strColorSfx = strColorSfx.Replace("'", "''");
 
-        String sqlQuery = "SELECT rack_loc AS ReturnField FROM ais_PartsNum WHERE part_no = '" + strPartsNo + "' AND color_sfx = '" + strColorSfx + "'";
+        String sqlQuery = "";
+
+        //String sqlQuery = "SELECT rack_loc AS ReturnField FROM ais_PartsNum WHERE part_no = '" + strPartsNo + "' AND color_sfx = '" + strColorSfx + "'";
+
+        string result = GetGroupLineByRackName(strRackName, strPlcNo);
+
+        string returnField = result == "1" ? "rack_loc" : "rack_loc_2";
+        //string sqlQuery = $"SELECT {returnField} AS ReturnField FROM ais_PartsNum WHERE part_no = '{strPartsNo}' AND color_sfx = '{strColorSfx}'";
+        sqlQuery = string.Format("SELECT {0} AS ReturnField FROM ais_PartsNum WHERE part_no = '{1}' AND color_sfx = '{2}'", returnField, strPartsNo, strColorSfx);
+
         try
         {
             return ConnQuery.getReturnFieldExecuteReader(sqlQuery);
@@ -2696,6 +2731,42 @@ public class csDatabase
             GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
             return "";
         }
+    }
+
+    public static string GetGroupLineByRackName(String strRackName, String strPlcNo)
+    {
+        strRackName = strRackName.Replace("'", "''");
+
+        String sqlQuery = "SELECT group_line AS ReturnField FROM dt_GroupMst WHERE group_name = (SELECT group_name FROM dt_RackMst WHERE rack_name = '" + strRackName + "') AND plc_no = '" + strPlcNo + "' ";
+        try
+        {
+            return ConnQuery.getReturnFieldExecuteReader(sqlQuery);
+        }
+        catch (Exception ex)
+        {
+            GlobalFunc.Log(ex);
+            GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
+            return "";
+        }
+
+    }
+
+    public static string GetGroupLineByRackNameNoPlc(String strRackName)
+    {
+        strRackName = strRackName.Replace("'", "''");
+
+        String sqlQuery = "SELECT group_line AS ReturnField FROM dt_GroupMst WHERE group_name = (SELECT group_name FROM dt_RackMst WHERE rack_name = '" + strRackName + "') ";
+        try
+        {
+            return ConnQuery.getReturnFieldExecuteReader(sqlQuery);
+        }
+        catch (Exception ex)
+        {
+            GlobalFunc.Log(ex);
+            GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
+            return "";
+        }
+
     }
 
     #region Rack Master Detail - AIS Selection
@@ -2848,8 +2919,8 @@ public class csDatabase
     //}
 
 
-    //ENHANCEMENT NEEDED
-    public static Boolean UpdPartsLoc(String strPartsNo, String strColorSfx, String strRackMstDetId, String strRackLoc)
+    //ENHANCEMENT NEEDED -DONE
+    public static Boolean UpdPartsLoc(String strPartsNo, String strColorSfx, String strRackMstDetId, String strRackLoc, String strRackName, String strPlcNo)
     {
         String sqlQuery = "";
         strPartsNo = strPartsNo.Replace("'", "''");
@@ -2857,13 +2928,20 @@ public class csDatabase
         strRackMstDetId = strRackMstDetId.Replace("'", "''");
         strRackLoc = strRackLoc.Replace("'", "''");
 
+        string GroupLine = GetGroupLineByRackName(strRackName, strPlcNo);
+        string rackLoc = GroupLine == "1" ? "rack_loc" : "rack_loc_2";
+        string rackDetID = GroupLine == "1" ? "rack_det_id" : "rack_det_id_2";
+        //sqlQuery = string.Format("SELECT {0} AS ReturnField FROM ais_PartsNum WHERE part_no = '{1}' AND color_sfx = '{2}'", returnField, strPartsNo, strColorSfx);
+
         if (strPartsNo == "" && strColorSfx == "" && strRackLoc == "")
         {
-            sqlQuery = "UPDATE ais_PartsNum SET rack_det_id = NULL, rack_loc = NULL WHERE rack_det_id = '" + strRackMstDetId + "'";
+            //sqlQuery = "UPDATE ais_PartsNum SET rack_det_id = NULL, rack_loc = NULL WHERE rack_det_id = '" + strRackMstDetId + "'";
+            sqlQuery = string.Format("UPDATE ais_PartsNum SET {0} = NULL, {1} = NULL WHERE {0} = '{2}'", rackDetID, rackLoc, strRackMstDetId);
         }
         else
         {
-            sqlQuery = "UPDATE ais_PartsNum SET rack_det_id = '" + strRackMstDetId + "', rack_loc = '" + strRackLoc + "' WHERE part_no = '" + strPartsNo + "' AND color_sfx = '" + strColorSfx + "'";
+            //sqlQuery = "UPDATE ais_PartsNum SET rack_det_id = '" + strRackMstDetId + "', rack_loc = '" + strRackLoc + "' WHERE part_no = '" + strPartsNo + "' AND color_sfx = '" + strColorSfx + "'";
+            sqlQuery = string.Format("UPDATE ais_PartsNum SET {0} = '{1}', {2} = '{3}' WHERE part_no = '{4}' AND color_sfx = '{5}'", rackDetID, strRackMstDetId, rackLoc, strRackLoc, strPartsNo, strColorSfx);
         }
 
         try
@@ -2971,7 +3049,7 @@ public class csDatabase
         return ConnQuery.getReturnFieldExecuteReader(sqlQuery);
     }
 
-    //ENHANCEMENT NEEDED
+    //ENHANCEMENT NEEDED? dt_LampModuleAddMst
     public static String UpdLampModuleLoc(String strProcName, String strModuleAdd, String strModuleName, String strRackMstDetId, String strRackLoc)
     {
         String sqlQuery = "";
@@ -4024,7 +4102,8 @@ public class csDatabase
         }
     }
 
-    public static String GetPartsRackLocExport(String strPartsNo, String strColorSfx, string strCriteria)
+    //ENHANCEMENT NEEDED - ING
+    public static String GetPartsRackLocExport(String strPartsNo, String strColorSfx, string strCriteria, int strPlcNo, String strRackName)
     {
 
 
@@ -4032,7 +4111,19 @@ public class csDatabase
         strPartsNo = strPartsNo.Replace("'", "''");
         strColorSfx = strColorSfx.Replace("'", "''");
 
-        String sqlQuery = "SELECT rack_loc AS ReturnField FROM ais_PartsNum WHERE part_no = '" + strPartsNo + "' AND color_sfx = '" + strColorSfx + "' " + strCriteria;
+        string sqlQuery = "";
+        string GroupLine = GetGroupLineByRackName(strRackName, strPlcNo.ToString());
+
+        if (GroupLine == "1")
+        {
+            sqlQuery = "SELECT rack_loc AS ReturnField FROM ais_PartsNum WHERE part_no = '" + strPartsNo + "' AND color_sfx = '" + strColorSfx + "' " + strCriteria;
+        }
+        else if (GroupLine == "2")
+        {
+            sqlQuery = "SELECT rack_loc_2 AS ReturnField FROM ais_PartsNum WHERE part_no = '" + strPartsNo + "' AND color_sfx = '" + strColorSfx + "' " + strCriteria;
+        }
+
+
         try
         {
             return ConnQuery.getReturnFieldExecuteReader(sqlQuery);
@@ -4048,6 +4139,7 @@ public class csDatabase
     public static String getSinglefield(String strFileName, string dictname, string strsearchvalue, string dictname2, string strsearchvalue2, string returnvalue)
     {
         String sqlQuery = "SELECT " + returnvalue + " as ReturnField  FROM " + strFileName + " WHERE " + dictname + " = '" + strsearchvalue + "'  AND " + dictname2 + " = '" + strsearchvalue2 + "'";
+        GlobalFunc.Log("getSinglefield query: " + sqlQuery);
         return ConnQuery.getReturnFieldExecuteReader(sqlQuery);
     }
 

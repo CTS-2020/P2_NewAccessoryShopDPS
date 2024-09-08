@@ -457,7 +457,7 @@ public partial class RackMst : System.Web.UI.Page
                         if (tmpRackMstDetIdCnt > 1)
                         {
                             String strRackLoc = tmpRackMstDetIdVal[0] + "  " + tmpRackMstDetIdVal[1] + "-" + tmpRackMstDetIdVal[2];
-                            csDatabase.UpdPartsLoc(strPartsNo, strColorSfx, strRackDetId, strRackLoc);
+                            //csDatabase.UpdPartsLoc(strPartsNo, strColorSfx, strRackDetId, strRackLoc, );
                         }
 
                         String strPartsNumSymbolCode = csDatabase.GetPartsNumSymbolCode(strPartsNo, strColorSfx).Trim();

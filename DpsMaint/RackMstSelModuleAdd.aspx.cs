@@ -149,7 +149,7 @@ public partial class SelectionModuleAdd : System.Web.UI.Page
             Boolean blDelFlg = csDatabase.DelRackMstDetModule(strRackMstDetId, strCurUser);
             if (blDelFlg)
             {
-                //ENHANCEMENT NEEDED
+                //ENHANCEMENT NEEDED? dt_LampModuleAddMst
                 csDatabase.UpdLampModuleLoc(strProcName, "", "", strRackMstDetId, "");
                 csDatabase.UpdLmChange(strPlcNo, strProcName, strBlockName, "");
                 GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> emptied Rack Master Location '" + strRackLoc + "' Module Address");

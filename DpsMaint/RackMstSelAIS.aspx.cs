@@ -299,7 +299,7 @@ public partial class SelectionAIS : System.Web.UI.Page
                     lblPos.BorderWidth = Unit.Pixel(1);
                     lblPos.Width = Unit.Percentage(14);
                     lblPos.Text = rowCtr + "-" + colCtr;
-                    
+
                     tCell.Controls.Add(lblRackHeader);
                     tCell.Controls.Add(lblPos);
 
@@ -408,7 +408,7 @@ public partial class SelectionAIS : System.Web.UI.Page
                             strHjColorSfx = Convert.ToString(dtHjData.Rows[i]["color_sfx"]).Trim();
                         }
                         #endregion
-                        
+
                         strPartDet = getPartDetString(strHjPartNo, strHjColorSfx);
                         lstAisString.Add(strHjId + "~" + strHjItemId + "~" + strHjRow + "~" + strHjCol + "~" + strHjPartsTitle + "~" +
                                          strHjPartNo + "~" + strHjColorSfx + "~" + strPartDet);
@@ -477,6 +477,7 @@ public partial class SelectionAIS : System.Web.UI.Page
             String strRackMstDetId = Convert.ToString(lblTmpPartId.Text);
             String strRackName = Convert.ToString(lblTmpRackName.Text);
             String strProcName = csDatabase.GetRackMstProcName(strRackName);
+            String strPlcNo = Convert.ToString(lblTmpPlcNo.Text);
 
             String strRackLoc = "";
             String[] tmpRackMstDetIdVal = strRackMstDetId.Split('^');
@@ -506,8 +507,8 @@ public partial class SelectionAIS : System.Web.UI.Page
                         {
                             csDatabase.UpdLampModuleLoc(strProcName, "", "", strRackMstDetId, "");
                         }
-                        //ENHANCEMENT NEEDED
-                        csDatabase.UpdPartsLoc("", "", strRackMstDetId, "");
+                        //ENHANCEMENT NEEDED -DONE
+                        csDatabase.UpdPartsLoc("", "", strRackMstDetId, "", strRackName, strPlcNo);
                     }
                     else
                     {
@@ -602,6 +603,17 @@ public partial class SelectionAIS : System.Web.UI.Page
                 String strCurUser = Convert.ToString(Session["SessUserId"]);  //***ace_20160416_001
 
                 #region Assign Pass-In Variable to Save Rack Master Detail
+                //strRackMstDet
+                //0     L1GW1 Rack 1^1^1
+                //1     ~HRG0003
+                //2     ~HI00085
+                //3     ~1
+                //4     ~2
+                //5     ~Spoiler Rr Upper
+                //6     ~76091-BZ200-J0
+                //7     ~0
+                //8     ~BLUE
+                //9     ~{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Arial;}{\f1\fnil\fcharset0 Microsoft Sans Serif;}}\viewkind4\uc1\pard\qc\b\fs161 BLUE\b0\f1\fs17\par}
                 String[] arrRackMstDet = strRackMstDet.Split('~');
                 String strRackMstDetId = arrRackMstDet[0];
                 String strHjId = arrRackMstDet[1];
@@ -617,7 +629,7 @@ public partial class SelectionAIS : System.Web.UI.Page
                 String strPlcNo = Convert.ToString(lblTmpPlcNo.Text);
                 String strProcName = Convert.ToString(lblTmpProcName.Text);
                 //String strCurRackLoc = csDatabase.GetAisRackLoc(strHjId, strHjItemId, strHjRow, strHjCol, strPartsNo, strColorSfx);
-                String strCurRackLoc = csDatabase.GetPartsRackLoc(strPartsNo, strColorSfx);
+                String strCurRackLoc = csDatabase.GetPartsRackLoc(strPartsNo, strColorSfx, strRackName, strPlcNo);
                 Boolean strExeFlag = false;
                 string msg;
 
@@ -675,14 +687,19 @@ public partial class SelectionAIS : System.Web.UI.Page
                                 strRackLoc = strRackLoc.Replace("'", "''");
 
 
-                                //ENHANCEMENT NEEDED
+                                //ENHANCEMENT NEEDED -DONE
                                 //when insert will need to determine which rack_det_id and rack_loc to update
                                 //then use the rack_det_id , split them with the delimiter ^ to get the rack name 
                                 //then use the rack name to filter in dt_RackMst to know which group_name it is 
                                 //then we know which rack_det_id and rack_loc to insert.
                                 //group_name : Line 1 will insert ot rack_det_id and rack_loc
                                 //group_name : Line 2 will insert to rack_det_id2 and rack_loc2
-                                sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = '" + strRackMstDetId + "', rack_loc = '" + strRackLoc + "' WHERE part_no = '" + strPartsNo + "' AND color_sfx = '" + strColorSfx + "'");
+                                string GroupLine = csDatabase.GetGroupLineByRackName(strRackName, strPlcNo);
+                                string rackLoc = GroupLine == "1" ? "rack_loc" : "rack_loc_2";
+                                string rackDetID = GroupLine == "1" ? "rack_det_id" : "rack_det_id_2";
+                                //sqlQuery = string.Format("SELECT {0} AS ReturnField FROM ais_PartsNum WHERE part_no = '{1}' AND color_sfx = '{2}'", returnField, strPartsNo, strColorSfx);
+                                sqlQuery.Add(string.Format("UPDATE ais_PartsNum SET {0} = '{1}', {2} = '{3}' WHERE part_no = '{4}' AND color_sfx = '{5}'", rackDetID, strRackMstDetId, rackLoc, strRackLoc, strPartsNo, strColorSfx));
+                                //sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = '" + strRackMstDetId + "', rack_loc = '" + strRackLoc + "' WHERE part_no = '" + strPartsNo + "' AND color_sfx = '" + strColorSfx + "'");
                                 //
                                 // ----- end 
 
@@ -701,14 +718,14 @@ public partial class SelectionAIS : System.Web.UI.Page
 
                                 GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> attempted to insert Rack Master Location '" + strRackLoc + "'");
 
-                                //ENHANCEMENT NEEDED? mcm no need
+                                //ENHANCEMENT NEEDED? dt_RackMstDet
                                 sqlQuery.Add("INSERT INTO dt_RackMstDet (rack_det_id, hj_id, hj_item_id, hj_row, hj_col, parts_title, parts_no, color_sfx, symbol_code, symbol_rtf, rack_name, plc_no, proc_name) VALUES ('" + strRackMstDetId + "', '" + strHjId + "','" + strHjItemId + "','" + strHjRow + "','" + strHjCol + "','" + strPartsTitle + "','" + strPartsNo + "','" + strColorSfx + "','" + strPartsNumSymbolCode + "','" + strPartsNumSymbolRtf + "','" + strRackName + "','" + strPlcNo + "','" + strProcName + "')");
 
                                 try
                                 {
 
                                     strExeFlag = ConnQuery.ExecuteTransSaveQuery(sqlQuery);
- 
+
                                 }
                                 catch (Exception ex)
                                 {
@@ -730,7 +747,7 @@ public partial class SelectionAIS : System.Web.UI.Page
                             //lblMsg.Visible = true;
                         }
 
-                      
+
                     }
                     else
                     {
@@ -740,7 +757,7 @@ public partial class SelectionAIS : System.Web.UI.Page
                         return;
                     }
                 }
-                // if the dt_RackMstDet rack_det_id column with data L1GW2 Rack 2^1^3 not exist
+                // if the dt_RackMstDet rack_det_id column with data L1GW2 Rack 2^1^3 exist
                 else
                 {
                     if (csDatabase.ChkAisPartsNumExist(strPartsNo, strColorSfx)) // ***ace_20160407_001
@@ -759,9 +776,13 @@ public partial class SelectionAIS : System.Web.UI.Page
                                 // remove rack id as null old record
                                 //
                                 //
-                                //ENHANCEMENT NEEDED
+                                //ENHANCEMENT NEEDED - DONE
                                 //set null for what rack_det_id and rack_loc
-                                sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = NULL, rack_loc = NULL WHERE rack_det_id = '" + strRackMstDetId + "'");
+                                string GroupLine = csDatabase.GetGroupLineByRackName(strRackName, strPlcNo);
+                                string rackLoc = GroupLine == "1" ? "rack_loc" : "rack_loc_2";
+                                string rackDetID = GroupLine == "1" ? "rack_det_id" : "rack_det_id_2";
+                                //sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = NULL, rack_loc = NULL WHERE rack_det_id = '" + strRackMstDetId + "'");
+                                sqlQuery.Add(string.Format("UPDATE ais_PartsNum SET {0} = NULL, {1} = NULL WHERE {0} = '{2}'", rackDetID, rackLoc, strRackMstDetId));
 
 
                                 //
@@ -779,10 +800,10 @@ public partial class SelectionAIS : System.Web.UI.Page
                                 strRackMstDetId = strRackMstDetId.Replace("'", "''");
                                 strRackLoc = strRackLoc.Replace("'", "''");
 
-                                //ENHANCEMENT NEEDED
+                                //ENHANCEMENT NEEDED-DONE
                                 //determine which to set.
-                                sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = '" + strRackMstDetId + "', rack_loc = '" + strRackLoc + "' WHERE part_no = '" + strPartsNo + "' AND color_sfx = '" + strColorSfx + "'");
-
+                                //sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = '" + strRackMstDetId + "', rack_loc = '" + strRackLoc + "' WHERE part_no = '" + strPartsNo + "' AND color_sfx = '" + strColorSfx + "'");
+                                sqlQuery.Add(string.Format("UPDATE ais_PartsNum SET {0} = '{1}', {2} = '{3}' WHERE part_no = '{4}' AND color_sfx = '{5}'", rackDetID, strRackMstDetId, rackLoc, strRackLoc, strPartsNo, strColorSfx));
 
 
                                 strRackMstDetId = strRackMstDetId.Replace("'", "''");
@@ -798,14 +819,12 @@ public partial class SelectionAIS : System.Web.UI.Page
 
                                 GlobalFunc.Log("<" + Convert.ToString(Session["SessUserId"]) + "> attempted to update Rack Master Location '" + strRackLoc + "'");
 
-                                //ENHANCEMENT NEEDED?
+                                //ENHANCEMENT NEEDED? dt_RackMstDet
                                 sqlQuery.Add("UPDATE dt_RackMstDet SET hj_id = '" + strHjId + "', hj_item_id = '" + strHjItemId + "', hj_row = '" + strHjRow + "', hj_col = '" + strHjCol + "', parts_title = '" + strPartsTitle + "', parts_no = '" + strPartsNo + "', color_sfx = '" + strColorSfx + "', symbol_code = '" + strPartsNumSymbolCode + "', symbol_rtf = '" + strPartsNumSymbolRtf + "', rack_name = '" + strRackName + "', plc_no = '" + strPlcNo + "', proc_name= '" + strProcName + "', last_upd_by = '" + strCurUser + "', last_upd_dt = CURRENT_TIMESTAMP WHERE rack_det_id = '" + strRackMstDetId + "'");
 
-                              
-                                
                                 try
                                 {
-                                   strExeFlag = ConnQuery.ExecuteTransSaveQuery(sqlQuery);
+                                    strExeFlag = ConnQuery.ExecuteTransSaveQuery(sqlQuery);
                                 }
                                 catch (Exception ex)
                                 {
@@ -818,7 +837,7 @@ public partial class SelectionAIS : System.Web.UI.Page
 
                             // end add
 
-                           
+
                         }
                         catch (Exception ex)
                         {
@@ -826,7 +845,7 @@ public partial class SelectionAIS : System.Web.UI.Page
                             GlobalFunc.ShowErrorMessage(Convert.ToString(ex.Message) + " " + Convert.ToString(ex.TargetSite));
 
                         }
- 
+
                     }
                     else
                     {
@@ -845,7 +864,7 @@ public partial class SelectionAIS : System.Web.UI.Page
                 {
                     Response.Redirect("RackMstDet.aspx");
                 }
- 
+
             }
         }
     }

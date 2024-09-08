@@ -203,7 +203,7 @@ public partial class RackMst : System.Web.UI.Page
 
     public void Errorlogformatting(object sender, GridViewRowEventArgs e)
     {
-        
+
         string status = Convert.ToString(e.Row.Cells[12].Text);
 
         //string data_errorlog = Convert.ToString(e.Row.Cells[13].Text);
@@ -214,14 +214,14 @@ public partial class RackMst : System.Web.UI.Page
 
         foreach (TableCell cell in e.Row.Cells)
         {
-        
+
             if (status == "NOT OK")
             {
                 cell.BackColor = Color.Red;
                 cell.ForeColor = Color.White;
-            } 
+            }
         }
- 
+
 
     }
 
@@ -333,7 +333,7 @@ public partial class RackMst : System.Web.UI.Page
         try
         {
 
- 
+
 
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
@@ -554,11 +554,12 @@ public partial class RackMst : System.Web.UI.Page
                     lblUploadStatus.Text = "Excel file being used by another person. Please closed it ";
                     GlobalFunc.Log(ex.Message);
                 }
- 
+
             }
         }
     }
 
+    //can only run on IIS 
     private void importExcel()
     {
         //DataTable dtBAgentExcel = null;
@@ -629,7 +630,7 @@ public partial class RackMst : System.Web.UI.Page
 
             for (int d = 0; d <= maxRack - 1; d++)
             {
- 
+
                 try
                 {
                     Temp_Rack = Convert.ToString(dsRackmstListTb.Rows[plcrow].ItemArray[datacolumn2Hdg]);
@@ -654,16 +655,24 @@ public partial class RackMst : System.Web.UI.Page
             string new_rack = "";
             string strrackcriteria1 = "";
             string strrackcriteria2 = "";
+            string strrackcriteria2_Ori = "";
             string strrackcriteria3 = "";
 
             if (rack1[0] != "" && rack1[0] != null)
             {
-                strrackcriteria1 = strrackcriteria1 + "rack_name = '" + rack1[0] + "' ";
-                strrackcriteria2 = strrackcriteria2 + "substring(rack_det_id,1, CHARINDEX('^',rack_det_id)-1)  = '" + rack1[0] + "'";
+                //ENHANCEMENT NEEDED -ING
+                string GroupLine = csDatabase.GetGroupLineByRackNameNoPlc(rack1[0]);
+                string rackDetIdCol = GroupLine == "1" ? "rack_det_id" : "rack_det_id_2";
+                string rackLocCol = GroupLine == "1" ? "rack_loc" : "rack_loc_2";
 
-                strrackcriteria3 = strrackcriteria3 + "AND (substring(rack_det_id,1, CHARINDEX('^',rack_det_id)-1)  != '" + rack1[0] + "'";
+                //strrackcriteria1 = strrackcriteria1 + "rack_name = '" + rack1[0] + "' ";
+                strrackcriteria1 = strrackcriteria1 + String.Format("rack_name = '{0}'", rack1[0]);
+                strrackcriteria2 = strrackcriteria2 + String.Format("substring({0}, 1, CHARINDEX('^', {0})-1) = '{1}'", rackDetIdCol, rack1[0]);
+                strrackcriteria3 = strrackcriteria3 + String.Format("AND substring({0}, 1, CHARINDEX('^', {0})-1) != '{1}'", rackDetIdCol, rack1[0]);
 
-            
+                strrackcriteria2_Ori = strrackcriteria2_Ori + "substring(rack_det_id,1, CHARINDEX('^',rack_det_id)-1)  = '" + rack1[0] + "'";
+
+                //strrackcriteria3 = strrackcriteria3 + "AND (substring(rack_det_id,1, CHARINDEX('^',rack_det_id)-1)  != '" + rack1[0] + "'";
             }
 
 
@@ -672,11 +681,20 @@ public partial class RackMst : System.Web.UI.Page
 
                 if (rack1[z] != "" && rack1[z] != null)
                 {
-                    strrackcriteria1 = strrackcriteria1 + " OR rack_name = '" + rack1[z] + "'";
-                    strrackcriteria2 = strrackcriteria2 + " OR substring(rack_det_id,1, CHARINDEX('^',rack_det_id)-1)  = '" + rack1[z] + "'";
+                    //ENHANCEMENT NEEDED -ING
+                    string GroupLine = csDatabase.GetGroupLineByRackNameNoPlc(rack1[z]);
+                    string rackDetIdCol = GroupLine == "1" ? "rack_det_id" : "rack_det_id_2";
+                    string rackLocCol = GroupLine == "1" ? "rack_loc" : "rack_loc_2";
 
-                    strrackcriteria3 = strrackcriteria3 + " AND substring(rack_det_id,1, CHARINDEX('^',rack_det_id)-1)  != '" + rack1[z] + "'";
-                
+                    //strrackcriteria1 = strrackcriteria1 + " OR rack_name = '" + rack1[z] + "'";
+                    strrackcriteria2_Ori = strrackcriteria2_Ori + " OR substring(rack_det_id,1, CHARINDEX('^',rack_det_id)-1)  = '" + rack1[z] + "'";
+
+                    //strrackcriteria3 = strrackcriteria3 + " AND substring(rack_det_id,1, CHARINDEX('^',rack_det_id)-1)  != '" + rack1[z] + "'";
+
+                    strrackcriteria1 += String.Format(" OR rack_name = '{0}'", rack1[z]);
+                    strrackcriteria2 += String.Format(" OR substring({0}, 1, CHARINDEX('^', {0})-1) = '{1}'", rackDetIdCol, rack1[z]);
+                    strrackcriteria3 += String.Format(" AND substring({0}, 1, CHARINDEX('^', {0})-1) != '{1}'", rackDetIdCol, rack1[z]);
+
                 }
 
             }
@@ -705,7 +723,7 @@ public partial class RackMst : System.Web.UI.Page
                 catch (Exception ex1)
                 {
                     strGrpname = "";
-                    GlobalFunc.Log(ex1.Message);
+                    GlobalFunc.Log("ex1: " + ex1.Message);
                 }
 
 
@@ -717,7 +735,7 @@ public partial class RackMst : System.Web.UI.Page
                 catch (Exception ex2)
                 {
                     strplc_no = 0;
-                    GlobalFunc.Log(ex2.Message);
+                    GlobalFunc.Log("ex2: " + ex2.Message);
                 }
 
                 try
@@ -728,7 +746,7 @@ public partial class RackMst : System.Web.UI.Page
                 catch (Exception ex3)
                 {
                     strRack_name = "";
-                    GlobalFunc.Log(ex3.Message);
+                    GlobalFunc.Log("ex3: " + ex3.Message);
                 }
 
                 try
@@ -739,7 +757,7 @@ public partial class RackMst : System.Web.UI.Page
                 catch (Exception ex4)
                 {
                     strproc_name = "";
-                    GlobalFunc.Log(ex4.Message);
+                    GlobalFunc.Log("ex4: " + ex4.Message);
                 }
 
                 try
@@ -750,7 +768,7 @@ public partial class RackMst : System.Web.UI.Page
                 catch (Exception ex5)
                 {
                     strRow = 0;
-                    GlobalFunc.Log(ex5.Message);
+                    GlobalFunc.Log("ex5: " + ex5.Message);
                 }
 
                 try
@@ -761,7 +779,7 @@ public partial class RackMst : System.Web.UI.Page
                 catch (Exception ex6)
                 {
                     strcolumn = 0;
-                    GlobalFunc.Log(ex6.Message);
+                    GlobalFunc.Log("ex6: " + ex6.Message);
                 }
 
                 try
@@ -772,7 +790,7 @@ public partial class RackMst : System.Web.UI.Page
                 catch (Exception ex7)
                 {
                     strblock_name = "";
-                    GlobalFunc.Log(ex7.Message);
+                    GlobalFunc.Log("ex7: " + ex7.Message);
                 }
 
                 if (strGrpname != "")
@@ -802,7 +820,7 @@ public partial class RackMst : System.Web.UI.Page
                             }
                         }
 
- 
+
 
                         DataRow[] group_name = dsRackmstTb.Select("group_name = '" + strGrpname.ToUpper() + "'");
                         if (group_name.Length == 0)
@@ -823,7 +841,7 @@ public partial class RackMst : System.Web.UI.Page
                     if (strRow > 5)
                     {
                         errmsg1 = errmsg1 + ", Row should not be more than 5 <br/> ";
-                   
+
                     }
 
                     if (strcolumn > 10)
@@ -857,8 +875,11 @@ public partial class RackMst : System.Web.UI.Page
                             }
 
                             string strAisData = dsRackmstListTb.Rows[RackdatarowStarting].ItemArray[nxCol].ToString();
+                            GlobalFunc.Log("strAisData:" + strAisData);
                             string strPartColor = dsRackmstListTb.Rows[RackdatarowStarting + 1].ItemArray[nxCol].ToString();
+                            GlobalFunc.Log("strPartColor: " + strPartColor);
                             string strModule = dsRackmstListTb.Rows[RackdatarowStarting + 2].ItemArray[nxCol].ToString().Split('(')[0].Trim();
+                            GlobalFunc.Log("strModule :" + strModule);
 
                             if ((strAisData != "Input AIS Data") && (strAisData != ""))
                             {
@@ -880,7 +901,7 @@ public partial class RackMst : System.Web.UI.Page
                                 if (row > strRow)
                                 {
                                     errmsg = errmsg + ", AIS Data Row is exceeded the rack row <br/> ";
-                               
+
                                 }
 
                                 if (col > strcolumn)
@@ -891,18 +912,21 @@ public partial class RackMst : System.Web.UI.Page
 
                                 try
                                 {
+
                                     string[] partno_colors = Convert.ToString(strPartColor).Split('-');
 
-                                    string rm_partno = partno_colors[0] + '-' + partno_colors[1];
-                                    string rm_color = partno_colors[2];
-
+                                    string rm_partno = partno_colors[0] + '-' + partno_colors[1] + '-' + partno_colors[2];
+                                    string rm_color = partno_colors[3];
+                                    GlobalFunc.Log("rm_partno checking: " + rm_partno + " , by partno_colors[0]: " + partno_colors[0] + " and partno_colors[1]: " + partno_colors[1] + ", rm_color: " + partno_colors[2]);
 
                                     // it should not exist in other rack, exist in same rack doesnt matter will remove and repopulate
                                     //
                                     //
                                     //  still pending ... dont know why return nothing
                                     //
-                                    String strCurRackLoc = csDatabase.GetPartsRackLocExport(rm_partno, rm_color, strrackcriteria3);
+                                    //ENHANCEMENT NEEDED -ING
+
+                                    String strCurRackLoc = csDatabase.GetPartsRackLocExport(rm_partno, rm_color, strrackcriteria3, strplc_no, strRack_name);
                                     string rm_rackid = strRack_name.ToUpper() + "^" + row + "^" + col;
 
 
@@ -923,8 +947,10 @@ public partial class RackMst : System.Web.UI.Page
                                     }
                                     else
                                     {
+                                        //ENHANCEMENT NEEDED - error occured here, check
                                         if (!csDatabase.ChkAisPartsNumExist(rm_partno, rm_color)) // ***ace_20160407_001
                                         {
+                                            GlobalFunc.Log("partNo checking: " + rm_partno);
                                             errmsg = errmsg + " Harigami Parts No not exist in Parts No master data." + rm_partno + " " + rm_color + " <br/>";
 
                                         }
@@ -943,7 +969,7 @@ public partial class RackMst : System.Web.UI.Page
                                 }
 
 
- 
+
 
                                 try
                                 {
@@ -983,7 +1009,7 @@ public partial class RackMst : System.Web.UI.Page
                                 }
                                 catch (Exception ex)
                                 {
-                                    errmsg = errmsg + " Module data.got probem <br/> " ;
+                                    errmsg = errmsg + " Module data.got probem <br/> ";
                                     GlobalFunc.Log(ex.Message);
                                 }
 
@@ -991,7 +1017,7 @@ public partial class RackMst : System.Web.UI.Page
 
 
 
-
+                                GlobalFunc.Log("errmsg until now is :" + errmsg);
                                 // --- end of pending ---
 
                                 if (errmsg != "")
@@ -1017,18 +1043,18 @@ public partial class RackMst : System.Web.UI.Page
                                 dr = dsRackmstTb.NewRow();
                                 dr["User_id"] = Session["SessUserID"];
                                 dr["plc_no"] = strplc_no + 0;
-                                dr["rack_name"] = strRack_name.ToUpper();
-                                dr["group_name"] = strGrpname.ToUpper();
+                                dr["rack_name"] = strRack_name;
+                                dr["group_name"] = strGrpname;
                                 dr["row"] = strRow + 0;
-                                dr["proc_name"] = strproc_name.ToUpper();
+                                dr["proc_name"] = strproc_name;
                                 dr["column"] = strcolumn + 0;
-                                dr["block"] = strblock_name.ToUpper();
-                                dr["AisData"] = strAisData.ToUpper();
-                                dr["PartColor"] = strPartColor.ToUpper();
-                                dr["Module"] = strModule.ToUpper();
+                                dr["block"] = strblock_name;
+                                dr["AisData"] = strAisData;
+                                dr["PartColor"] = strPartColor;
+                                dr["Module"] = strModule;
                                 dr["actcol"] = col;
                                 dr["actrow"] = row;
-                                dr["Result"] = result.ToUpper();
+                                dr["Result"] = result;
                                 dr["Error_log"] = errmsg1.ToUpper() + errmsg.ToUpper();
                                 dr["upload_date"] = upload_date;
 
@@ -1040,7 +1066,7 @@ public partial class RackMst : System.Web.UI.Page
 
                                 log_message = log_message + "Record plc_no : " + strplc_no;
                                 log_message = log_message + " rack_name : " + strRack_name;
-                                log_message = log_message + " group_name : "+ strGrpname;
+                                log_message = log_message + " group_name : " + strGrpname;
                                 log_message = log_message + " row : " + strRow;
                                 log_message = log_message + " proc_name : " + strproc_name;
                                 log_message = log_message + " column :" + strcolumn;
@@ -1071,8 +1097,11 @@ public partial class RackMst : System.Web.UI.Page
                     detailrecordrackchecking[detailrackcnt] = strRack_name;
                     detailrackcnt = detailrackcnt + 1;
 
-               }
+                }
             }
+
+            string tableData = DataTableToString(dsRackmstTb);
+            GlobalFunc.Log("dsRackmstTb datatable data: " + tableData);
 
 
             if (dsRackmstTb.Rows.Count > 0)
@@ -1126,9 +1155,27 @@ public partial class RackMst : System.Web.UI.Page
 
                     //INITIALISE ALL RECORD PERTAINING TO THE EXCEL SHEET
                     //
+                    string GroupLine = csDatabase.GetGroupLineByRackNameNoPlc(rack1[0]);
+                    string rackDetIdCol = GroupLine == "1" ? "rack_det_id" : "rack_det_id_2";
+                    string rackLocCol = GroupLine == "1" ? "rack_loc" : "rack_loc_2";
+
                     sqlQuery.Add("delete from dt_RackMstDet where " + strrackcriteria1);
-                    sqlQuery.Add("update ais_PartsNum set rack_det_id = null, rack_loc = null WHERE " + strrackcriteria2);
-                    sqlQuery.Add("update dt_LampModuleAddMst SET rack_det_id = null, rack_loc = null WHERE " + strrackcriteria2);
+                    //ENHANCEMENT NEEDED -ING
+
+                    // Check if the string contains rack_det_id_2 or rack_det_id
+                    if (strrackcriteria2.Contains("rack_det_id_2"))
+                    {
+                        // It's using rack_det_id_2
+                        sqlQuery.Add("update ais_PartsNum set rack_det_id_2 = null, rack_loc_2 = null WHERE " + strrackcriteria2);
+                    }
+                    else if (strrackcriteria2.Contains("rack_det_id"))
+                    {
+                        // It's using rack_det_id
+                        sqlQuery.Add("update ais_PartsNum set rack_det_id = null, rack_loc = null WHERE " + strrackcriteria2);
+                    }
+
+
+                    sqlQuery.Add("update dt_LampModuleAddMst SET rack_det_id = null, rack_loc = null WHERE " + strrackcriteria2_Ori);
 
 
 
@@ -1153,8 +1200,8 @@ public partial class RackMst : System.Web.UI.Page
 
                         string[] partno_colors = Convert.ToString(dsRackmstTb.Rows[v]["PartColor"]).Split('-');
 
-                        string rm_partno = partno_colors[0] + '-' + partno_colors[1];
-                        string rm_color = partno_colors[2];
+                        string rm_partno = partno_colors[0] + '-' + partno_colors[1] + '-' + partno_colors[2];
+                        string rm_color = partno_colors[3];
 
                         string rm_col = Convert.ToString(dsRackmstTb.Rows[v]["actcol"]);
                         string rm_row = Convert.ToString(dsRackmstTb.Rows[v]["actrow"]);
@@ -1170,6 +1217,8 @@ public partial class RackMst : System.Web.UI.Page
 
                         string module = rm_modules[0].Trim();
                         string strModuleName = rm_modules[1].Trim();
+
+                        string strBlockName = Convert.ToString(dsRackmstTb.Rows[v]["block"]);
 
                         String strRackLoc = "";
                         String[] tmpRackMstDetIdVal = rm_rackid.Split('^');
@@ -1220,7 +1269,13 @@ public partial class RackMst : System.Web.UI.Page
                                 rm_rackid = rm_rackid.Replace("'", "''");
                                 strRackLoc = strRackLoc.Replace("'", "''");
 
-                                sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = '" + rm_rackid + "', rack_loc = '" + strRackLoc + "' WHERE part_no = '" + rm_partno + "' AND color_sfx = '" + rm_color + "'");
+                                //ENHANCEMENT NEEDED
+                                //sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = '" + rm_rackid + "', rack_loc = '" + strRackLoc + "' WHERE part_no = '" + rm_partno + "' AND color_sfx = '" + rm_color + "'");
+                                string GroupLine2 = csDatabase.GetGroupLineByRackNameNoPlc(tmpRackMstDetIdVal[0]);
+                                string rackLoc = GroupLine2 == "1" ? "rack_loc" : "rack_loc_2";
+                                string rackDetID = GroupLine2 == "1" ? "rack_det_id" : "rack_det_id_2";
+                                //sqlQuery.Add("UPDATE ais_PartsNum SET rack_det_id = NULL, rack_loc = NULL WHERE rack_det_id = '" + strRackMstDetId + "'");
+                                sqlQuery.Add(string.Format("UPDATE ais_PartsNum SET {0} = '{1}', {2} = '{3}' WHERE part_no = '{4}' AND color_sfx = '{5}' ", rackDetID, rm_rackid, rackLoc, strRackLoc, rm_partno, rm_color));
 
 
                                 // add by vincent end
@@ -1241,7 +1296,7 @@ public partial class RackMst : System.Web.UI.Page
                                 sqlQuery.Add("INSERT INTO dt_RackMstDet (rack_det_id, hj_id, hj_item_id, hj_row, hj_col, parts_title, parts_no, color_sfx, symbol_code, symbol_rtf, rack_name, plc_no, proc_name) VALUES ('" + rm_rackid + "', '" + strHjId + "','" + strHjItemId + "','" + strHjRow + "','" + strHjCol + "','" + strPartsTitle + "','" + strPartsNo + "','" + strColorSfx + "','" + strPartsNumSymbolCode + "','" + strPartsNumSymbolRtf + "','" + rm_rack_name + "','" + rm_plc_no + "','" + rm_proc_name + "')");
 
 
-                                sqlQuery.Add("UPDATE dt_RackMstDet SET rack_name = '" + rm_rack_name + "', module_add = '" + module + "', module_name = '" + strModuleName + "', last_upd_by = '" + rm_last_upd_by + "', last_upd_dt = CURRENT_TIMESTAMP WHERE rack_det_id = '" + rm_rackid + "'");
+                                sqlQuery.Add("UPDATE dt_RackMstDet SET rack_name = '" + rm_rack_name + "', module_add = '" + module + "', module_name = '" + strBlockName + "', last_upd_by = '" + rm_last_upd_by + "', last_upd_dt = CURRENT_TIMESTAMP WHERE rack_det_id = '" + rm_rackid + "'");
 
                                 if (module == "" && strModuleName == "" && strRackLoc == "")
                                 {
@@ -1276,9 +1331,10 @@ public partial class RackMst : System.Web.UI.Page
 
                     try
                     {
-
+                        string fullQuery = String.Join(" \n\n\n ", sqlQuery);
+                        GlobalFunc.Log("check the sqlQuery: " + fullQuery);
                         strExeFlag = ConnQuery.ExecuteTransSaveQuery(sqlQuery);
-
+                        GlobalFunc.Log("check the strExeFlag: " + strExeFlag);
 
                     }
                     catch (Exception ex)
@@ -1287,7 +1343,7 @@ public partial class RackMst : System.Web.UI.Page
                         GlobalFunc.Log(ex.Message);
                     }
 
- 
+
                     NewPageIndex = 0;
                     BindGridErrorlog(dsRackmstTb);
 
@@ -1337,5 +1393,30 @@ public partial class RackMst : System.Web.UI.Page
         }
 
 
+    }
+
+    // Method to convert DataTable to a string for logging
+    public static string DataTableToString(DataTable table)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        // Append column names
+        foreach (DataColumn col in table.Columns)
+        {
+            sb.Append(col.ColumnName + "\t");
+        }
+        sb.AppendLine();
+
+        // Append row data
+        foreach (DataRow row in table.Rows)
+        {
+            foreach (var item in row.ItemArray)
+            {
+                sb.Append(item.ToString() + "\t");
+            }
+            sb.AppendLine();
+        }
+
+        return sb.ToString();
     }
 }
