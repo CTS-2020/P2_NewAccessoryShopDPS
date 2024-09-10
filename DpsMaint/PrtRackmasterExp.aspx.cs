@@ -217,6 +217,13 @@ public partial class PlcConvResult : System.Web.UI.Page
                                 newWorksheet.Cells[rrow, 13].Value = row["row_cnt"].ToString();
                                 newWorksheet.Cells[crow, 13].Value = row["col_cnt"].ToString();
 
+                                plcrow = plcrow + 22;
+                                grprow = grprow + 22;
+                                procrow = procrow + 22;
+                                blkrow = blkrow + 22;
+                                rnrow = rnrow + 22;
+                                rrow = rrow + 22;
+                                crow = crow + 22;
 
                                 if (oldrack != null)
                                 {
